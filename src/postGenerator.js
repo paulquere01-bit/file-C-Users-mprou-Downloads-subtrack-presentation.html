@@ -52,6 +52,29 @@ const CONTENT_ANGLES = [
 
 const WEEK_DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
+const CADENCE_COPY = {
+  daily: {
+    label: "quotidien",
+    maxPosts: 30,
+    shouldPublish: () => true,
+  },
+  weekdays: {
+    label: "jours ouvrables",
+    maxPosts: 22,
+    shouldPublish: (date) => ![0, 6].includes(date.getUTCDay()),
+  },
+  three_per_week: {
+    label: "3 posts par semaine",
+    maxPosts: 13,
+    shouldPublish: (date) => [1, 3, 5].includes(date.getUTCDay()),
+  },
+  weekly: {
+    label: "hebdomadaire",
+    maxPosts: 5,
+    shouldPublish: (date) => date.getUTCDay() === 1,
+  },
+};
+
 function clean(value, fallback = "") {
   const text = String(value ?? "").trim();
   return text || fallback;
@@ -63,6 +86,24 @@ function createId() {
   }
 
   return `post_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+}
+
+function parseStartDate(value) {
+  const date = value ? new Date(value) : new Date();
+
+  if (Number.isNaN(date.getTime())) {
+    return new Date();
+  }
+
+  return date;
+}
+
+function formatDatePart(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function formatScheduledAt(date, publishTime) {
+  return `${formatDatePart(date)}T${publishTime}:00`;
 }
 
 function sentenceCase(value) {
@@ -191,6 +232,71 @@ export function generateContentCalendar(input, count = 7) {
       cta: `Inviter ${audience} a partager son experience.`,
     };
   });
+}
+
+export function generateAutomationPlan(input, options = {}) {
+  const topic = clean(input?.topic, "votre expertise LinkedIn");
+  const audience = clean(input?.audience, "votre audience");
+  const goal = clean(input?.goal, "education");
+  const tone = clean(input?.tone, "direct");
+  const length = clean(input?.length, "medium");
+  const details = clean(input?.details);
+  const cadence = clean(options.cadence || input?.cadence, "weekdays");
+  const cadenceCopy = CADENCE_COPY[cadence] || CADENCE_COPY.weekdays;
+  const publishTime = /^\d{2}:\d{2}$/.test(clean(options.publishTime || input?.publishTime))
+    ? clean(options.publishTime || input?.publishTime)
+    : "09:00";
+  const windowDays = Math.max(7, Math.min(Number(options.windowDays) || 30, 60));
+  const startDate = parseStartDate(options.startDate);
+  const calendarIdeas = generateContentCalendar({ topic, audience, goal }, cadenceCopy.maxPosts);
+  const items = [];
+
+  for (let dayOffset = 0; dayOffset < windowDays && items.length < cadenceCopy.maxPosts; dayOffset += 1) {
+    const date = new Date(
+      Date.UTC(
+        startDate.getUTCFullYear(),
+        startDate.getUTCMonth(),
+        startDate.getUTCDate() + dayOffset,
+      ),
+    );
+
+    if (!cadenceCopy.shouldPublish(date)) {
+      continue;
+    }
+
+    const idea = calendarIdeas[items.length % calendarIdeas.length];
+    const post = generateLinkedInPost({
+      topic: `${idea.title}. ${idea.prompt}`,
+      audience,
+      goal,
+      tone,
+      length,
+      details: details || `Publier selon le plan automatique ${cadenceCopy.label}`,
+    });
+
+    items.push({
+      slot: items.length + 1,
+      status: "scheduled",
+      scheduledFor: formatScheduledAt(date, publishTime),
+      day: WEEK_DAYS[(date.getUTCDay() + 6) % 7],
+      angle: idea.angle,
+      title: idea.title,
+      objective: idea.objective,
+      prompt: idea.prompt,
+      post,
+    });
+  }
+
+  return {
+    id: createId(),
+    createdAt: new Date().toISOString(),
+    cadence,
+    cadenceLabel: cadenceCopy.label,
+    publishTime,
+    windowDays,
+    totalPosts: items.length,
+    items,
+  };
 }
 
 export function formatPostForDisplay(result) {

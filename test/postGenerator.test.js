@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { generateContentCalendar, generateLinkedInPost } from "../src/postGenerator.js";
+import {
+  generateAutomationPlan,
+  generateContentCalendar,
+  generateLinkedInPost,
+} from "../src/postGenerator.js";
 
 describe("post generator", () => {
   it("builds a LinkedIn post with hook, audience, details and hashtags", () => {
@@ -58,5 +62,47 @@ describe("post generator", () => {
     );
 
     assert.equal(ideas.length, 30);
+  });
+
+  it("creates an automatic posting plan for weekdays", () => {
+    const plan = generateAutomationPlan(
+      {
+        topic: "generer des posts LinkedIn automatiquement",
+        audience: "fondateurs SaaS",
+        goal: "authority",
+        tone: "expert",
+        length: "short",
+        cadence: "weekdays",
+        publishTime: "08:30",
+      },
+      {
+        startDate: "2026-05-04",
+        windowDays: 7,
+      },
+    );
+
+    assert.equal(plan.cadence, "weekdays");
+    assert.equal(plan.publishTime, "08:30");
+    assert.equal(plan.totalPosts, 5);
+    assert.equal(plan.items[0].scheduledFor, "2026-05-04T08:30:00");
+    assert.equal(plan.items[0].status, "scheduled");
+    assert.match(plan.items[0].post.post, /generer des posts LinkedIn automatiquement/i);
+  });
+
+  it("caps automatic plans to the selected cadence", () => {
+    const plan = generateAutomationPlan(
+      {
+        topic: "creer un calendrier editorial",
+        audience: "consultants",
+        cadence: "weekly",
+      },
+      {
+        startDate: "2026-05-04",
+        windowDays: 60,
+      },
+    );
+
+    assert.equal(plan.totalPosts, 5);
+    assert.ok(plan.items.every((item) => item.day === "Lundi"));
   });
 });

@@ -7,8 +7,9 @@ MVP SaaS autonome qui genere des posts LinkedIn a partir d'un brief simple.
 - Landing page SaaS responsive.
 - Generateur de posts LinkedIn avec objectif, audience, ton et longueur.
 - Calendrier editorial de 7 idees.
+- Auto-planification de posts sur 30 jours avec cadence et heure de publication.
 - Historique local via `localStorage`.
-- Copier le post et exporter les generations en JSON.
+- Copier le post et exporter les generations, calendriers et plans automatiques en JSON.
 - Tests unitaires du moteur de generation.
 
 ## Lancer le projet

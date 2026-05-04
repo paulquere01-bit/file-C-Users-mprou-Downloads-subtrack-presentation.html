@@ -26,6 +26,7 @@
         <div class="nav-links">
           <a href="#features">Fonctionnalites</a>
           <a href="#generator">Generateur</a>
+          <a href="#automation">Automatisation</a>
           <a href="#pricing">Tarifs</a>
         </div>
         <a class="nav-cta" href="#generator">Essayer gratis</a>
@@ -200,10 +201,40 @@
               />
             </label>
 
+            <div class="automation-controls" id="automation" aria-label="Parametres d'automatisation">
+              <div>
+                <p class="eyebrow">Automatisation</p>
+                <h3>Planifiez vos posts en pilote automatique.</h3>
+                <p>
+                  Choisissez une cadence et une heure de publication. Le SaaS prepare les posts,
+                  les dates et les statuts pour un export pret a brancher sur un outil de scheduling.
+                </p>
+              </div>
+              <div class="form-grid">
+                <label>
+                  Cadence
+                  <select id="cadence" name="cadence">
+                    <option value="weekdays" selected>Jours ouvrables</option>
+                    <option value="daily">Tous les jours</option>
+                    <option value="three_per_week">3 fois par semaine</option>
+                    <option value="weekly">Hebdomadaire</option>
+                  </select>
+                </label>
+
+                <label>
+                  Heure
+                  <input id="publishTime" name="publishTime" type="time" value="09:00" />
+                </label>
+              </div>
+            </div>
+
             <div class="actions-row">
               <button class="button primary" type="submit">Generer le post</button>
               <button class="button secondary" id="calendar-button" type="button">
                 Generer 7 idees
+              </button>
+              <button class="button secondary" id="automation-button" type="button">
+                Auto-planifier 30 jours
               </button>
             </div>
           </form>
@@ -234,6 +265,22 @@
             </button>
           </div>
           <div class="calendar-grid" id="calendar-output"></div>
+        </section>
+
+        <section class="automation-card" aria-labelledby="automation-title">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Pilote automatique</p>
+              <h3 id="automation-title">Planning de posts automatises</h3>
+            </div>
+            <button class="icon-button" id="automation-export-button" type="button">
+              Export automation
+            </button>
+          </div>
+          <div class="automation-summary" id="automation-summary">
+            Configurez votre cadence puis lancez l'auto-planification.
+          </div>
+          <div class="automation-list" id="automation-output"></div>
         </section>
       </section>
 

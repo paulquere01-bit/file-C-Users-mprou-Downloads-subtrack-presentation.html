@@ -77,6 +77,7 @@ a {
 .hero-actions,
 .actions-row,
 .result-actions,
+.automation-summary,
 .footer-inner {
   display: flex;
   align-items: center;
@@ -239,6 +240,7 @@ h3 {
 .brief-card,
 .result-card,
 .calendar-card,
+.automation-card,
 .feature-grid article,
 .pricing-grid article {
   border: 1px solid rgba(217, 224, 234, 0.9);
@@ -359,7 +361,8 @@ h3 {
 
 .brief-card,
 .result-card,
-.calendar-card {
+.calendar-card,
+.automation-card {
   padding: 26px;
 }
 
@@ -443,6 +446,66 @@ pre {
 
 .calendar-card {
   margin-top: 22px;
+}
+
+.automation-card {
+  margin-top: 22px;
+}
+
+.automation-controls {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, #ffffff, #f5f8ff);
+}
+
+.automation-summary {
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.automation-summary span {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--primary-dark);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.automation-list {
+  display: grid;
+  gap: 12px;
+  max-height: 420px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.automation-item {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: white;
+}
+
+.automation-item h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.automation-item span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--primary);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.automation-item small {
+  color: var(--muted);
 }
 
 .calendar-grid {
