@@ -13,9 +13,20 @@ const calendarButton = document.querySelector("#calendar-button");
 const copyButton = document.querySelector("#copy-button");
 const downloadButton = document.querySelector("#download-button");
 const clearHistoryButton = document.querySelector("#clear-history-button");
+const toneVisual = document.querySelector("#tone-visual");
+const lengthVisual = document.querySelector("#length-visual");
 
 let currentPost = null;
 let currentCalendar = [];
+
+const demoBrief = {
+  topic: "transformer LinkedIn en canal d'acquisition",
+  audience: "consultants et fondateurs B2B",
+  goal: "lead",
+  tone: "linora",
+  length: "medium",
+  details: "montrer qu'un bon post doit attirer des prospects, pas seulement des vues",
+};
 
 function createId() {
   if (globalThis.crypto?.randomUUID) {
@@ -32,8 +43,8 @@ function getBriefFromForm() {
     topic: data.get("topic"),
     audience: data.get("audience"),
     goal: data.get("goal"),
-    tone: data.get("tone"),
-    length: data.get("length"),
+    tone: toneVisual?.value || data.get("tone"),
+    length: lengthVisual?.value || data.get("length"),
     details: data.get("details"),
   };
 }
@@ -156,4 +167,5 @@ clearHistoryButton.addEventListener("click", () => {
   }, 1600);
 });
 
+renderPost(generateLinkedInPost(demoBrief));
 renderCalendar([]);

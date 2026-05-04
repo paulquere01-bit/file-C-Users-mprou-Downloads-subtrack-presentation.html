@@ -4,20 +4,22 @@ import { describe, it } from "node:test";
 import { generateContentCalendar, generateLinkedInPost } from "../src/postGenerator.js";
 
 describe("post generator", () => {
-  it("builds a LinkedIn post with hook, audience, details and hashtags", () => {
+  it("builds a client-focused LinkedIn post with a human structure", () => {
     const result = generateLinkedInPost({
-      topic: "trouver ses premiers clients B2B",
-      audience: "fondateurs SaaS",
+      topic: "aider les coachs business a trouver leurs clients LinkedIn",
+      audience: "coachs business independants",
       goal: "lead",
       tone: "direct",
       length: "medium",
-      details: "inclure une question finale",
+      details: "mettre en avant le manque de systeme et inviter a demander un audit",
     });
 
-    assert.match(result.post, /trouver ses premiers clients B2B/i);
-    assert.match(result.post, /fondateurs SaaS/);
-    assert.match(result.post, /inclure une question finale/);
-    assert.match(result.post, /#/);
+    assert.match(result.post, /Si ton dernier post LinkedIn/);
+    assert.match(result.post, /coachs business independants/);
+    assert.match(result.post, /C'est un probleme de systeme/);
+    assert.match(result.post, /mettre en avant le manque de systeme/);
+    assert.match(result.post, /Commente "audit"/);
+    assert.ok(result.hashtags.includes("#LinkedIn"));
     assert.equal(result.brief.goal, "lead");
   });
 
@@ -32,7 +34,7 @@ describe("post generator", () => {
     );
   });
 
-  it("creates seven calendar ideas with actionable metadata", () => {
+  it("creates seven calendar ideas with acquisition metadata", () => {
     const ideas = generateContentCalendar({
       topic: "automatiser la prospection",
       audience: "consultants",
@@ -44,7 +46,7 @@ describe("post generator", () => {
     assert.equal(ideas[0].day, "Lundi");
     assert.match(ideas[0].title, /automatiser la prospection/);
     assert.match(ideas[0].objective, /consultants/);
-    assert.match(ideas[0].prompt, /exemple concret/);
+    assert.match(ideas[0].prompt, /accroche forte/);
   });
 
   it("keeps the requested number of calendar ideas within safe bounds", () => {

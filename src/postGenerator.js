@@ -1,53 +1,59 @@
 const GOAL_COPY = {
   education: {
     label: "education",
-    hook: "La plupart des gens compliquent ce sujet, alors qu'il peut devenir simple.",
-    cta: "Quel conseil ajouteriez-vous a cette liste ?",
+    opening: "La plupart des gens compliquent ce sujet. Pourtant, le probleme est souvent plus simple.",
+    promise: "Je vais vous montrer une facon plus claire de l'aborder.",
+    cta: "Si vous voulez la checklist, commentez \"systeme\".",
   },
   authority: {
     label: "autorite",
-    hook: "Voici une conviction que je repete souvent a mes clients.",
-    cta: "Si vous voulez que je detaille ma methode, dites-le en commentaire.",
+    opening: "Voici une conviction que je repete souvent aux dirigeants que j'accompagne.",
+    promise: "Elle change la facon de prendre la parole sur LinkedIn.",
+    cta: "Si vous voulez que je detaille la methode, dites-le en commentaire.",
   },
   lead: {
-    label: "generation de leads",
-    hook: "Si vous essayez d'obtenir plus d'opportunites, commencez par ce diagnostic.",
-    cta: "Commentez \"audit\" si vous voulez recevoir la checklist.",
+    label: "acquisition",
+    opening: "Si vos posts LinkedIn ne generent pas d'opportunites, ce n'est pas forcement un probleme de talent.",
+    promise: "C'est souvent un probleme de systeme.",
+    cta: "Commente \"audit\" si tu veux recevoir la checklist d'acquisition LinkedIn.",
   },
   story: {
     label: "storytelling",
-    hook: "J'ai longtemps pense que le probleme venait de l'algorithme. En realite, il venait du message.",
+    opening: "J'ai longtemps pense que le probleme venait de l'algorithme. En realite, il venait de mon message.",
+    promise: "Le jour ou j'ai change mon angle, les conversations ont change aussi.",
     cta: "Vous avez deja vecu ca ? Racontez-moi votre experience.",
   },
   launch: {
     label: "lancement",
-    hook: "On vient de lancer quelque chose qui peut faire gagner beaucoup de temps.",
+    opening: "On vient de lancer quelque chose qui peut faire gagner beaucoup de temps.",
+    promise: "Mais je ne veux pas seulement vous parler de fonctionnalites.",
     cta: "Envoyez-moi un message si vous voulez le tester en avant-premiere.",
   },
 };
 
-const TONE_COPY = {
-  direct: "Soyez concret, evitez le jargon et donnez une prochaine action claire.",
-  storytelling: "Racontez le contexte, la tension, puis la lecon apprise.",
-  expert: "Cadrez le probleme, partagez un raisonnement et montrez votre methode.",
-  contrarian: "Remettez en question une idee recue sans devenir agressif.",
-  friendly: "Gardez un ton accessible, humain et encourageant.",
+const TONE_LINES = {
+  linora: "Pas avec de la motivation. Avec un systeme simple, repetable et facile a tenir.",
+  direct: "Pas de theorie inutile. Juste ce qui cree un vrai signal.",
+  storytelling: "Au debut, je pensais qu'il fallait publier plus. Puis j'ai compris qu'il fallait publier mieux.",
+  expert: "Le sujet n'est pas la motivation. Le sujet, c'est la qualite du systeme.",
+  contrarian: "Le probleme, ce n'est pas que LinkedIn est sature. C'est que la plupart des posts se ressemblent.",
+  friendly: "La bonne nouvelle : ce n'est pas reserve aux createurs ultra-inspires.",
 };
 
-const LENGTH_LINES = {
-  short: 3,
-  medium: 5,
-  long: 7,
+const LENGTH_BLOCKS = {
+  short: 4,
+  medium: 6,
+  long: 8,
 };
 
 const CONTENT_ANGLES = [
-  "erreur frequente",
-  "checklist pratique",
+  "probleme cache",
   "avant/apres",
-  "coulisses",
-  "mythe a casser",
-  "framework en 3 etapes",
-  "mini etude de cas",
+  "croyance a casser",
+  "systeme simple",
+  "erreur couteuse",
+  "preuve client",
+  "checklist actionnable",
 ];
 
 const WEEK_DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
@@ -74,69 +80,95 @@ function sentenceCase(value) {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
 }
 
-function splitTopic(topic) {
-  return clean(topic)
-    .split(/[.!?\n]/)
-    .map((part) => part.trim())
-    .filter(Boolean);
+function normalizeLine(value) {
+  return clean(value).replace(/\s+/g, " ");
 }
 
-function buildBodyLines({ topic, audience, details, goal, tone, length }) {
-  const lines = [];
-  const topicParts = splitTopic(topic);
-  const mainTopic = sentenceCase(topicParts[0] || topic);
-  const targetAudience = clean(audience, "votre audience");
-  const detailText = clean(details);
-  const wantedLines = LENGTH_LINES[length] || LENGTH_LINES.medium;
-
-  lines.push(`${mainTopic}.`);
-  lines.push(`Pour ${targetAudience}, le vrai enjeu n'est pas de publier plus, mais de publier avec un angle clair.`);
-
-  if (goal === "lead") {
-    lines.push("Le signal le plus fort vient souvent d'un post qui nomme un probleme precis et propose une prochaine etape simple.");
-  } else if (goal === "launch") {
-    lines.push("Un bon lancement ne liste pas seulement des fonctionnalites : il montre le changement concret pour l'utilisateur.");
-  } else if (goal === "story") {
-    lines.push("Le declic arrive quand vous reliez une experience personnelle a une lecon utile pour le lecteur.");
-  } else {
-    lines.push("La difference se joue dans la clarte : un probleme, une idee, une action.");
-  }
-
-  lines.push(`Angle recommande : ${TONE_COPY[tone] || TONE_COPY.direct}`);
-
-  if (detailText) {
-    lines.push(`A integrer : ${detailText}.`);
-  }
-
-  lines.push("Structure simple a utiliser :");
-  lines.push("1. Decrivez le probleme en une phrase.");
-  lines.push("2. Partagez ce que vous avez appris.");
-  lines.push("3. Terminez avec une question qui lance la conversation.");
-
-  return lines.slice(0, wantedLines + 2);
-}
-
-function buildHashtags(topic, audience, goal) {
+function extractKeywords(topic, audience) {
   const words = `${topic} ${audience}`
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .match(/[a-z0-9]{4,}/g);
 
-  const uniqueWords = Array.from(new Set(words || []));
-  const topicalTags = uniqueWords.slice(0, 2).map((word) => `#${word}`);
-  const goalTag = goal === "lead" ? "#prospection" : goal === "launch" ? "#lancement" : "#linkedin";
+  return Array.from(new Set(words || [])).slice(0, 3);
+}
 
-  return Array.from(new Set(["#LinkedIn", goalTag, ...topicalTags])).slice(0, 5);
+function buildHashtags(topic, audience, goal) {
+  const goalTag = goal === "lead" ? "#Acquisition" : goal === "launch" ? "#Lancement" : "#LinkedIn";
+  const keywordTags = extractKeywords(topic, audience).map((word) => `#${word}`);
+
+  return Array.from(new Set(["#LinkedIn", goalTag, "#PersonalBranding", ...keywordTags])).slice(0, 5);
+}
+
+function buildPainBlock(audience, topic) {
+  return [
+    `La plupart des ${audience} font la meme erreur :`,
+    "- ils publient quand ils ont le temps",
+    "- ils parlent trop vite de leur offre",
+    "- ils copient des formats qui ne leur ressemblent pas",
+    "- puis ils esperent que l'algorithme fasse le reste",
+    "",
+    `Spoiler : ca ne marche pas pour ${topic}.`,
+  ].join("\n");
+}
+
+function buildSystemBlock(topic, audience, details) {
+  const optionalDetail = details ? `\n\nDans votre cas, il faut aussi integrer : ${details}.` : "";
+
+  return [
+    "Un bon post client se pilote avec :",
+    "-> une accroche qui nomme le probleme",
+    "-> une tension que le lecteur reconnait",
+    "-> une idee simple a retenir",
+    "-> une preuve ou un exemple concret",
+    "-> une invitation naturelle a discuter",
+    "",
+    `C'est exactement ce qu'il faut construire pour ${audience} autour de : ${topic}.${optionalDetail}`,
+  ].join("\n");
+}
+
+function buildOfferBridge(goal, audience) {
+  if (goal === "lead") {
+    return `Si LinkedIn doit devenir un canal d'acquisition pour ${audience}, il ne faut pas plus de posts. Il faut de meilleurs signaux.`;
+  }
+
+  if (goal === "launch") {
+    return `Si vous voulez lancer sans crier dans le vide, commencez par montrer le changement concret pour ${audience}.`;
+  }
+
+  if (goal === "story") {
+    return `Une histoire fonctionne quand ${audience} se reconnait dans le probleme avant de decouvrir la solution.`;
+  }
+
+  return `Quand ${audience} comprend le probleme, la valeur devient beaucoup plus facile a vendre.`;
+}
+
+function buildPostSections({ topic, audience, details, goal, tone, length }) {
+  const goalCopy = GOAL_COPY[goal] || GOAL_COPY.lead;
+  const blockLimit = LENGTH_BLOCKS[length] || LENGTH_BLOCKS.medium;
+  const baseSections = [
+    `Si ton dernier post LinkedIn a fait moins de 500 vues, ce n'est pas un probleme d'algorithme.\nC'est un probleme de systeme.`,
+    `${goalCopy.opening}\n${goalCopy.promise}`,
+    `Tu ne rates pas LinkedIn parce que ton marche est trop petit.\nTu le rates parce que ton message n'est pas encore assez net.`,
+    buildPainBlock(audience, topic),
+    TONE_LINES[tone] || TONE_LINES.direct,
+    buildSystemBlock(topic, audience, details),
+    buildOfferBridge(goal, audience),
+    `Concretement, le prochain post doit faire trois choses :\n1. attirer la bonne personne\n2. lui faire dire "c'est exactement mon probleme"\n3. lui donner envie de parler avec vous`,
+    `C'est comme ca qu'un post passe de contenu visible a contenu qui cree des clients.`,
+  ];
+
+  return baseSections.slice(0, blockLimit);
 }
 
 export function generateLinkedInPost(input) {
-  const topic = clean(input?.topic);
-  const audience = clean(input?.audience);
-  const goal = clean(input?.goal, "education");
+  const topic = normalizeLine(input?.topic);
+  const audience = normalizeLine(input?.audience);
+  const goal = clean(input?.goal, "lead");
   const tone = clean(input?.tone, "direct");
   const length = clean(input?.length, "medium");
-  const details = clean(input?.details);
+  const details = normalizeLine(input?.details);
 
   if (!topic) {
     throw new Error("Le sujet est obligatoire pour generer un post.");
@@ -146,9 +178,9 @@ export function generateLinkedInPost(input) {
     throw new Error("L'audience est obligatoire pour generer un post.");
   }
 
-  const goalCopy = GOAL_COPY[goal] || GOAL_COPY.education;
-  const hook = `${goalCopy.hook}\n\nSujet : ${sentenceCase(topic)}`;
-  const body = buildBodyLines({ topic, audience, details, goal, tone, length }).join("\n\n");
+  const goalCopy = GOAL_COPY[goal] || GOAL_COPY.lead;
+  const hook = `${sentenceCase(topic)} : le vrai probleme n'est pas de publier plus.`;
+  const body = buildPostSections({ topic, audience, details, goal, tone, length }).join("\n\n");
   const hashtags = buildHashtags(topic, audience, goal);
   const post = `${hook}\n\n${body}\n\n${goalCopy.cta}\n\n${hashtags.join(" ")}`;
 
@@ -172,23 +204,23 @@ export function generateLinkedInPost(input) {
 }
 
 export function generateContentCalendar(input, count = 7) {
-  const topic = clean(input?.topic, "votre expertise");
-  const audience = clean(input?.audience, "votre audience");
-  const goal = clean(input?.goal, "education");
+  const topic = normalizeLine(input?.topic) || "transformer LinkedIn en canal client";
+  const audience = normalizeLine(input?.audience) || "votre audience";
+  const goal = clean(input?.goal, "lead");
   const itemCount = Math.max(1, Math.min(Number(count) || 7, 30));
+  const goalCopy = GOAL_COPY[goal] || GOAL_COPY.lead;
 
   return Array.from({ length: itemCount }, (_, index) => {
     const angle = CONTENT_ANGLES[index % CONTENT_ANGLES.length];
     const day = WEEK_DAYS[index % WEEK_DAYS.length];
-    const goalCopy = GOAL_COPY[goal] || GOAL_COPY.education;
 
     return {
       day,
       angle,
       title: `${sentenceCase(angle)} : ${topic}`,
       objective: `Creer un post ${goalCopy.label} pour ${audience}`,
-      prompt: `Expliquez ${topic} sous l'angle "${angle}" avec un exemple concret et une question finale.`,
-      cta: `Inviter ${audience} a partager son experience.`,
+      prompt: `Racontez ${topic} sous l'angle "${angle}" avec une accroche forte, une tension client et une invitation a discuter.`,
+      cta: `Inviter ${audience} a demander la checklist ou un audit.`,
     };
   });
 }

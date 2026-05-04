@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="PostPilot AI genere automatiquement des posts LinkedIn performants pour les fondateurs, freelances et equipes marketing."
+      content="Linora transforme une idee brute en post LinkedIn humain, clair et oriente clients."
     />
-    <title>PostPilot AI - SaaS de generation LinkedIn</title>
+    <title>Linora - Posts LinkedIn qui attirent des clients</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./src/styles.css" />
@@ -19,207 +19,239 @@
   <body>
     <header class="site-header">
       <nav class="nav container" aria-label="Navigation principale">
-        <a class="brand" href="#top" aria-label="PostPilot AI accueil">
-          <span class="brand-mark">P</span>
-          <span>PostPilot AI</span>
+        <a class="brand" href="#top" aria-label="Linora accueil">
+          <span class="brand-mark">L</span>
+          <span>Linora</span>
         </a>
         <div class="nav-links">
-          <a href="#features">Fonctionnalites</a>
-          <a href="#generator">Generateur</a>
-          <a href="#pricing">Tarifs</a>
+          <a href="#top">Accueil</a>
+          <a href="#systeme">Le systeme</a>
+          <a href="#offres">Offres</a>
+          <a href="#questions">Questions</a>
         </div>
-        <a class="nav-cta" href="#generator">Essayer gratis</a>
+        <div class="nav-actions">
+          <a class="login-link" href="#generator">Se connecter</a>
+          <a class="nav-cta" href="#generator">S'inscrire gratuitement</a>
+        </div>
       </nav>
     </header>
 
     <main id="top">
-      <section class="hero container">
-        <div class="hero-copy">
-          <p class="eyebrow">SaaS LinkedIn pour createurs occupes</p>
-          <h1>Generez des posts LinkedIn prets a publier en moins d'une minute.</h1>
-          <p class="hero-text">
-            PostPilot AI transforme une idee brute en accroche, storytelling, call-to-action,
-            hashtags et calendrier editorial. Ideal pour garder une presence LinkedIn reguliere
-            sans repartir de zero chaque jour.
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#generator">Generer un post</a>
-            <a class="button secondary" href="#demo">Voir un exemple</a>
+      <section class="hero">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="container hero-inner">
+          <div class="social-proof">
+            <span class="mini-avatars" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <strong>+8 000 professionnels</strong>
+            utilisent Linora pour LinkedIn
           </div>
-          <div class="hero-stats" aria-label="Statistiques produit">
-            <div>
-              <strong>12</strong>
-              <span>angles de contenu</span>
-            </div>
-            <div>
-              <strong>30j</strong>
-              <span>planning editable</span>
-            </div>
-            <div>
-              <strong>0</strong>
-              <span>dependance serveur</span>
-            </div>
-          </div>
-        </div>
-        <aside class="hero-card" id="demo" aria-label="Exemple de post LinkedIn">
-          <div class="post-preview">
-            <div class="post-author">
-              <div class="avatar">AI</div>
-              <div>
-                <strong>Votre prochaine publication</strong>
-                <span>Generee par PostPilot AI</span>
-              </div>
-            </div>
-            <p class="preview-hook">"J'ai arrete de vendre mes services. Voici ce qui a change."</p>
-            <p>
-              Pendant des mois, mes posts parlaient de mes offres. Peu d'engagement. Puis j'ai
-              commence a documenter les problemes reels que je resolvais...
-            </p>
-            <button class="ghost-button" type="button">Copier le post</button>
-          </div>
-        </aside>
-      </section>
 
-      <section class="logo-strip" aria-label="Profils cibles">
-        <span>Fondateurs</span>
-        <span>Freelances</span>
-        <span>Consultants</span>
-        <span>Agences</span>
-        <span>Sales B2B</span>
-      </section>
+          <h1>Une presence LinkedIn, <span class="gradient-text">sans contrainte</span></h1>
+          <p class="hero-subtitle">Pas juste de la visibilite, de l'acquisition.</p>
 
-      <section class="features container" id="features">
-        <div class="section-heading">
-          <p class="eyebrow">Du brouillon au planning</p>
-          <h2>Tout ce qu'il faut pour publier regulierement.</h2>
-        </div>
-        <div class="feature-grid">
-          <article>
-            <span class="feature-icon">01</span>
-            <h3>Posts personnalises</h3>
-            <p>
-              Choisissez votre audience, votre ton et votre objectif pour obtenir un post adapte a
-              votre positionnement.
-            </p>
-          </article>
-          <article>
-            <span class="feature-icon">02</span>
-            <h3>Calendrier editorial</h3>
-            <p>
-              Generez plusieurs idees de posts avec angles, objectifs et jours de publication
-              recommandes.
-            </p>
-          </article>
-          <article>
-            <span class="feature-icon">03</span>
-            <h3>Export rapide</h3>
-            <p>
-              Copiez un post, telechargez vos generations en JSON et gardez votre historique en
-              local.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="app-shell container" id="generator" aria-labelledby="generator-title">
-        <div class="section-heading">
-          <p class="eyebrow">Studio de generation</p>
-          <h2 id="generator-title">Creez votre prochain post LinkedIn.</h2>
-          <p>
-            Remplissez le brief. Le moteur local cree une version structuree que vous pouvez
-            ajuster avant publication.
-          </p>
-        </div>
-
-        <div class="workspace">
-          <form class="brief-card" id="post-form">
-            <label>
-              Idee ou sujet principal
-              <textarea
-                id="topic"
-                name="topic"
-                rows="4"
-                required
-                placeholder="Ex: Comment j'ai trouve mes 10 premiers clients B2B sans publicite"
-              ></textarea>
-            </label>
-
-            <div class="form-grid">
+          <form class="hero-generator" id="post-form">
+            <label class="sr-only" for="topic">Decris ton activite</label>
+            <textarea
+              id="topic"
+              name="topic"
+              rows="3"
+              required
+              placeholder="Decris ton activite en une phrase..."
+            ></textarea>
+            <div class="quick-fields">
               <label>
-                Audience
+                Client cible
                 <input
                   id="audience"
                   name="audience"
                   type="text"
                   required
-                  placeholder="Ex: fondateurs SaaS early-stage"
+                  value="entrepreneurs B2B"
                 />
               </label>
-
               <label>
                 Objectif
                 <select id="goal" name="goal">
-                  <option value="education">Eduquer</option>
+                  <option value="lead" selected>Attirer des clients</option>
                   <option value="authority">Construire l'autorite</option>
-                  <option value="lead">Generer des leads</option>
-                  <option value="story">Partager une histoire</option>
-                  <option value="launch">Annoncer un lancement</option>
+                  <option value="education">Eduquer le marche</option>
+                  <option value="story">Raconter une histoire</option>
+                  <option value="launch">Lancer une offre</option>
                 </select>
               </label>
             </div>
-
-            <div class="form-grid">
-              <label>
-                Ton
-                <select id="tone" name="tone">
-                  <option value="direct">Direct et clair</option>
-                  <option value="storytelling">Storytelling</option>
-                  <option value="expert">Expert</option>
-                  <option value="contrarian">Contrarien</option>
-                  <option value="friendly">Accessible</option>
-                </select>
-              </label>
-
-              <label>
-                Longueur
-                <select id="length" name="length">
-                  <option value="short">Court</option>
-                  <option value="medium" selected>Moyen</option>
-                  <option value="long">Long</option>
-                </select>
-              </label>
-            </div>
-
-            <label>
-              Details optionnels
-              <input
-                id="details"
-                name="details"
-                type="text"
-                placeholder="Ex: inclure 3 conseils pratiques et une invitation a commenter"
-              />
-            </label>
-
-            <div class="actions-row">
-              <button class="button primary" type="submit">Generer le post</button>
-              <button class="button secondary" id="calendar-button" type="button">
-                Generer 7 idees
-              </button>
-            </div>
+            <input
+              id="details"
+              name="details"
+              type="text"
+              placeholder="Optionnel : promesse, offre, preuve, objection..."
+            />
+            <input id="tone" name="tone" type="hidden" value="linora" />
+            <input id="length" name="length" type="hidden" value="long" />
+            <button class="button primary hero-button" type="submit">Creer mon premier post</button>
           </form>
+
+          <div class="trust-row">
+            <span>Pas de prompt complique</span>
+            <span>Post pret a publier</span>
+            <span>Oriente clients</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="comparison container" id="systeme" aria-labelledby="comparison-title">
+        <div class="section-heading centered">
+          <p class="eyebrow">Avant / apres</p>
+          <h2 id="comparison-title">La difference entre poster pour poster et publier pour vendre.</h2>
+        </div>
+
+        <div class="compare-grid">
+          <article class="compare-card bad">
+            <div class="pill red">Avec ChatGPT</div>
+            <div class="linkedin-card bad-card">
+              <div class="post-author">
+                <div class="avatar photo-red"></div>
+                <div>
+                  <strong>Lucas Dubois</strong>
+                  <span>Consultant B2B - 1er</span>
+                </div>
+              </div>
+              <p class="tiny-title">La regle des 3 ecoutes pour transformer votre business digital</p>
+              <ol>
+                <li>Ecoute active : interagissez regulierement avec votre audience.</li>
+                <li>Analyse comportementale : utilisez les donnees pour voir ce qui fonctionne.</li>
+                <li>Adaptation constante : ajustez votre approche.</li>
+              </ol>
+              <p>Adaptez-vous pour rester pertinent.</p>
+              <div class="fake-actions">
+                <span>0 vues</span>
+                <span>1 commentaire</span>
+              </div>
+            </div>
+            <strong class="client-count negative">+ 0 Clients</strong>
+          </article>
+
+          <div class="arrow" aria-hidden="true">-&gt;</div>
+
+          <article class="compare-card good">
+            <div class="pill green">Avec Linora</div>
+            <div class="linkedin-card good-card">
+              <div class="post-author">
+                <div class="avatar photo-green"></div>
+                <div>
+                  <strong>Lucas Dubois</strong>
+                  <span>Consultant B2B - 1er</span>
+                </div>
+              </div>
+              <p>
+                LinkedIn m'a rendu riche.
+                <br /><br />
+                Pas par chance.<br />
+                Pas par reseau.<br />
+                Pas par magie.
+                <br /><br />
+                Mais parce que j'ai compris une chose : LinkedIn n'est pas un reseau social. C'est un
+                levier business.
+              </p>
+              <p class="bullet-lines">
+                Quand tu sais :<br />
+                - capter l'attention<br />
+                - structurer tes posts<br />
+                - convertir sans vendre<br />
+                - etre regulier sans t'epuiser
+              </p>
+              <div class="fake-actions">
+                <span>495 reactions</span>
+                <span>1043 commentaires</span>
+              </div>
+            </div>
+            <strong class="client-count positive">+12 Clients</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="system-section">
+        <div class="container system-grid">
+          <div>
+            <p class="eyebrow">Le systeme Linora</p>
+            <h2>Un moteur qui ecrit comme un humain, pas comme une IA.</h2>
+            <p>
+              Linora ne te donne pas un post generique. Il part de ton activite, de ton client ideal
+              et de ton objectif pour creer un post avec tension, preuve, rythme et appel a l'action.
+            </p>
+          </div>
+          <div class="system-cards">
+            <article>
+              <span>01</span>
+              <h3>Accroche forte</h3>
+              <p>Un debut qui nomme un probleme reel et donne envie de lire la suite.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Structure claire</h3>
+              <p>Des phrases courtes, des respirations et une progression logique.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Conversion douce</h3>
+              <p>Un CTA qui attire les bons prospects sans forcer la vente.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="studio container" id="generator" aria-labelledby="generator-title">
+        <div class="section-heading centered">
+          <p class="eyebrow">Generation de post</p>
+          <h2 id="generator-title">Ton post LinkedIn client-ready.</h2>
+          <p>
+            Complete le brief en haut de page, puis ajuste ici si besoin. Chaque generation garde une
+            logique : probleme, systeme, preuve, action.
+          </p>
+        </div>
+
+        <div class="workspace">
+          <section class="brief-card">
+            <label>
+              Ton du post
+              <select id="tone-visual" aria-label="Ton visuel">
+                <option value="linora" selected>Linora - direct et humain</option>
+                <option value="storytelling">Storytelling</option>
+                <option value="expert">Expert</option>
+                <option value="contrarian">Contrarien</option>
+              </select>
+            </label>
+            <label>
+              Longueur
+              <select id="length-visual" aria-label="Longueur visuelle">
+                <option value="medium">Moyen</option>
+                <option value="long" selected>Long et complet</option>
+              </select>
+            </label>
+            <button class="button secondary" id="calendar-button" type="button">
+              Generer 7 angles de contenu
+            </button>
+            <button class="ghost-button" id="clear-history-button" type="button">
+              Effacer l'historique
+            </button>
+          </section>
 
           <section class="result-card" aria-live="polite">
             <div class="result-header">
               <div>
                 <p class="eyebrow">Resultat</p>
-                <h3>Post LinkedIn</h3>
+                <h3>Post pret a publier</h3>
               </div>
               <div class="result-actions">
                 <button class="icon-button" id="copy-button" type="button">Copier</button>
                 <button class="icon-button" id="download-button" type="button">JSON</button>
               </div>
             </div>
-            <pre id="post-output">Votre post genere apparaitra ici.</pre>
+            <pre id="post-output">Decris ton activite puis clique sur "Creer mon premier post".</pre>
           </section>
         </div>
 
@@ -227,29 +259,26 @@
           <div class="result-header">
             <div>
               <p class="eyebrow">Planning</p>
-              <h3 id="calendar-title">Idees de posts pour la semaine</h3>
+              <h3 id="calendar-title">Angles de posts pour la semaine</h3>
             </div>
-            <button class="icon-button" id="clear-history-button" type="button">
-              Effacer l'historique
-            </button>
           </div>
           <div class="calendar-grid" id="calendar-output"></div>
         </section>
       </section>
 
-      <section class="pricing container" id="pricing">
-        <div class="section-heading">
-          <p class="eyebrow">Monetisation SaaS</p>
-          <h2>Des offres simples pour transformer le MVP en business.</h2>
+      <section class="pricing container" id="offres">
+        <div class="section-heading centered">
+          <p class="eyebrow">Offres</p>
+          <h2>Une machine a contenu simple a vendre.</h2>
         </div>
         <div class="pricing-grid">
           <article>
             <h3>Starter</h3>
             <p class="price">19 EUR<span>/mois</span></p>
             <ul>
-              <li>50 generations mensuelles</li>
-              <li>Historique local</li>
-              <li>Exports JSON</li>
+              <li>50 posts par mois</li>
+              <li>Templates de hooks</li>
+              <li>Export JSON</li>
             </ul>
           </article>
           <article class="highlighted">
@@ -257,8 +286,8 @@
             <p class="price">49 EUR<span>/mois</span></p>
             <ul>
               <li>Posts illimites</li>
-              <li>Calendrier editorial</li>
-              <li>Templates par objectif</li>
+              <li>Angles de contenu</li>
+              <li>Posts orientes acquisition</li>
             </ul>
           </article>
           <article>
@@ -272,12 +301,33 @@
           </article>
         </div>
       </section>
+
+      <section class="faq container" id="questions">
+        <div class="section-heading centered">
+          <p class="eyebrow">Questions</p>
+          <h2>Pourquoi Linora genere mieux qu'un prompt classique ?</h2>
+        </div>
+        <div class="faq-grid">
+          <article>
+            <h3>Est-ce que c'est automatique ?</h3>
+            <p>Oui. Tu donnes ton activite, ton client cible et ton objectif. Linora produit le post.</p>
+          </article>
+          <article>
+            <h3>Est-ce que le post vend trop fort ?</h3>
+            <p>Non. Le CTA reste naturel : il ouvre une conversation avec les bons prospects.</p>
+          </article>
+          <article>
+            <h3>Est-ce connecte a LinkedIn ?</h3>
+            <p>Pas encore. Ce MVP genere, copie et exporte. La publication automatique peut venir ensuite.</p>
+          </article>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
       <div class="container footer-inner">
-        <span>PostPilot AI - MVP SaaS LinkedIn</span>
-        <a href="#generator">Lancer le generateur</a>
+        <span>Linora - Presence LinkedIn, sans contrainte</span>
+        <a href="#generator">Creer un post</a>
       </div>
     </footer>
 
