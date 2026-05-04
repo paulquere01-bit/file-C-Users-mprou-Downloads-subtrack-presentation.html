@@ -1,0 +1,19 @@
+{
+  "name": "linkedin-post-saas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "MVP SaaS autonome pour generer des posts LinkedIn.",
+  "scripts": {
+    "dev": "python3 -m http.server 5173",
+    "lint": "node --check src/postGenerator.js && node --check src/app.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "linkedin",
+    "saas",
+    "content-generation"
+  ],
+  "author": "",
+  "license": "UNLICENSED"
+}
