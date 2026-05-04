@@ -26,6 +26,7 @@
         <div class="nav-links">
           <a href="#top">Accueil</a>
           <a href="#systeme">Le systeme</a>
+          <a href="#autopilot">Autopilot</a>
           <a href="#offres">Offres</a>
           <a href="#questions">Questions</a>
         </div>
@@ -51,7 +52,10 @@
           </div>
 
           <h1>Une presence LinkedIn, <span class="gradient-text">sans contrainte</span></h1>
-          <p class="hero-subtitle">Pas juste de la visibilite, de l'acquisition.</p>
+          <p class="hero-subtitle">
+            Le SaaS qui transforme ton expertise en posts LinkedIn automatiques, prets a publier,
+            sans prompt complique.
+          </p>
 
           <form class="hero-generator" id="post-form">
             <label class="sr-only" for="topic">Decris ton activite</label>
@@ -96,9 +100,9 @@
           </form>
 
           <div class="trust-row">
-            <span>Pas de prompt complique</span>
-            <span>Post pret a publier</span>
-            <span>Oriente clients</span>
+            <span>Generation automatique</span>
+            <span>Calendrier pret</span>
+            <span>Posts orientes clients</span>
           </div>
         </div>
       </section>
@@ -178,10 +182,10 @@
         <div class="container system-grid">
           <div>
             <p class="eyebrow">Le systeme Linora</p>
-            <h2>Un moteur qui ecrit comme un humain, pas comme une IA.</h2>
+            <h2>Un moteur autonome qui ecrit comme un humain, pas comme une IA.</h2>
             <p>
               Linora ne te donne pas un post generique. Il part de ton activite, de ton client ideal
-              et de ton objectif pour creer un post avec tension, preuve, rythme et appel a l'action.
+              et de ton objectif pour creer des posts avec tension, preuve, rythme et appel a l'action.
             </p>
           </div>
           <div class="system-cards">
@@ -204,13 +208,43 @@
         </div>
       </section>
 
+      <section class="autopilot-section" id="autopilot">
+        <div class="container autopilot-grid">
+          <div>
+            <p class="eyebrow">Autopilot LinkedIn</p>
+            <h2>Une semaine de posts generee en un clic.</h2>
+            <p>
+              Choisis une cadence, donne ton angle business, puis Linora prepare une file de posts
+              avec dates, angles editoriaux et textes complets.
+            </p>
+          </div>
+          <div class="autopilot-steps">
+            <article>
+              <strong>01</strong>
+              <span>Brief unique</span>
+              <p>Ton activite, ton audience et ton objectif restent la source de verite.</p>
+            </article>
+            <article>
+              <strong>02</strong>
+              <span>Angles varies</span>
+              <p>Chaque post prend un angle different pour eviter le contenu repetitif.</p>
+            </article>
+            <article>
+              <strong>03</strong>
+              <span>File prete</span>
+              <p>Copie, exporte ou planifie les posts dans ton workflow LinkedIn.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="studio container" id="generator" aria-labelledby="generator-title">
         <div class="section-heading centered">
-          <p class="eyebrow">Generation de post</p>
-          <h2 id="generator-title">Ton post LinkedIn client-ready.</h2>
+          <p class="eyebrow">Generation autonome</p>
+          <h2 id="generator-title">Ton cockpit de posts LinkedIn.</h2>
           <p>
-            Complete le brief en haut de page, puis ajuste ici si besoin. Chaque generation garde une
-            logique : probleme, systeme, preuve, action.
+            Complete le brief en haut de page, ajuste la cadence ici, puis laisse Linora preparer un
+            post ou une serie complete.
           </p>
         </div>
 
@@ -232,6 +266,17 @@
                 <option value="long" selected>Long et complet</option>
               </select>
             </label>
+            <label>
+              Cadence autopilot
+              <select id="cadence-visual" aria-label="Cadence autopilot">
+                <option value="daily">1 post par jour</option>
+                <option value="three_per_week" selected>3 posts par semaine</option>
+                <option value="weekly">1 post par semaine</option>
+              </select>
+            </label>
+            <button class="button primary" id="autopilot-button" type="button">
+              Generer automatiquement
+            </button>
             <button class="button secondary" id="calendar-button" type="button">
               Generer 7 angles de contenu
             </button>
@@ -264,12 +309,22 @@
           </div>
           <div class="calendar-grid" id="calendar-output"></div>
         </section>
+
+        <section class="autopilot-card" aria-labelledby="autopilot-title">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">File automatique</p>
+              <h3 id="autopilot-title">Posts prets a publier</h3>
+            </div>
+          </div>
+          <div class="autopilot-output" id="autopilot-output"></div>
+        </section>
       </section>
 
       <section class="pricing container" id="offres">
         <div class="section-heading centered">
           <p class="eyebrow">Offres</p>
-          <h2>Une machine a contenu simple a vendre.</h2>
+          <h2>Une machine a contenu LinkedIn simple a vendre.</h2>
         </div>
         <div class="pricing-grid">
           <article>

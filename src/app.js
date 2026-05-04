@@ -1,5 +1,6 @@
 import {
   formatPostForDisplay,
+  generateAutopilotPlan,
   generateContentCalendar,
   generateLinkedInPost,
 } from "./postGenerator.js";
@@ -15,9 +16,13 @@ const downloadButton = document.querySelector("#download-button");
 const clearHistoryButton = document.querySelector("#clear-history-button");
 const toneVisual = document.querySelector("#tone-visual");
 const lengthVisual = document.querySelector("#length-visual");
+const cadenceVisual = document.querySelector("#cadence-visual");
+const autopilotButton = document.querySelector("#autopilot-button");
+const autopilotOutput = document.querySelector("#autopilot-output");
 
 let currentPost = null;
 let currentCalendar = [];
+let currentAutopilotPlan = [];
 
 const demoBrief = {
   topic: "transformer LinkedIn en canal d'acquisition",
@@ -87,6 +92,49 @@ function renderCalendar(items) {
   });
 }
 
+function renderAutopilotPlan(items) {
+  currentAutopilotPlan = items;
+  autopilotOutput.innerHTML = "";
+
+  if (items.length === 0) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "empty-state";
+    emptyState.textContent = "Lancez l'autopilot pour preparer vos prochains posts.";
+    autopilotOutput.append(emptyState);
+    return;
+  }
+
+  items.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "autopilot-item";
+
+    const meta = document.createElement("div");
+    meta.className = "autopilot-meta";
+
+    const date = document.createElement("span");
+    date.textContent = item.publishOn;
+
+    const status = document.createElement("small");
+    status.textContent = item.status;
+
+    const title = document.createElement("h4");
+    title.textContent = item.title;
+
+    const preview = document.createElement("p");
+    preview.textContent = item.post.hook;
+
+    const button = document.createElement("button");
+    button.className = "ghost-button";
+    button.type = "button";
+    button.textContent = "Afficher";
+    button.addEventListener("click", () => renderPost(item.post));
+
+    meta.append(date, status);
+    card.append(meta, title, preview, button);
+    autopilotOutput.append(card);
+  });
+}
+
 function loadHistory() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -126,14 +174,28 @@ function downloadJson(payload, filename) {
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  const post = generateLinkedInPost(getBriefFromForm());
+  const brief = getBriefFromForm();
+  const post = generateLinkedInPost(brief);
   renderPost(post);
   saveGeneration(post);
+  renderAutopilotPlan(
+    generateAutopilotPlan(brief, {
+      cadence: cadenceVisual?.value,
+    }),
+  );
 });
 
 calendarButton.addEventListener("click", () => {
   const calendar = generateContentCalendar(getBriefFromForm());
   renderCalendar(calendar);
+});
+
+autopilotButton.addEventListener("click", () => {
+  const plan = generateAutopilotPlan(getBriefFromForm(), {
+    cadence: cadenceVisual?.value,
+  });
+  renderAutopilotPlan(plan);
+  renderPost(plan[0].post);
 });
 
 copyButton.addEventListener("click", async () => {
@@ -153,6 +215,7 @@ downloadButton.addEventListener("click", () => {
     {
       post: currentPost,
       calendar: currentCalendar,
+      autopilotPlan: currentAutopilotPlan,
       exportedAt: new Date().toISOString(),
     },
     "postpilot-export.json",
@@ -169,3 +232,4 @@ clearHistoryButton.addEventListener("click", () => {
 
 renderPost(generateLinkedInPost(demoBrief));
 renderCalendar([]);
+renderAutopilotPlan([]);

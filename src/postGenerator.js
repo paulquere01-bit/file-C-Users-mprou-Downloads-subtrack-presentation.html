@@ -58,6 +58,24 @@ const CONTENT_ANGLES = [
 
 const WEEK_DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
+const AUTOPILOT_CADENCES = {
+  daily: {
+    label: "1 post par jour",
+    count: 7,
+    intervalDays: 1,
+  },
+  three_per_week: {
+    label: "3 posts par semaine",
+    count: 6,
+    intervalDays: 2,
+  },
+  weekly: {
+    label: "1 post par semaine",
+    count: 4,
+    intervalDays: 7,
+  },
+};
+
 function clean(value, fallback = "") {
   const text = String(value ?? "").trim();
   return text || fallback;
@@ -82,6 +100,20 @@ function sentenceCase(value) {
 
 function normalizeLine(value) {
   return clean(value).replace(/\s+/g, " ");
+}
+
+function getCadence(value) {
+  return AUTOPILOT_CADENCES[value] || AUTOPILOT_CADENCES.three_per_week;
+}
+
+function addDays(date, days) {
+  const nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + days);
+  return nextDate;
+}
+
+function formatDate(date) {
+  return date.toISOString().slice(0, 10);
 }
 
 function extractKeywords(topic, audience) {
@@ -221,6 +253,48 @@ export function generateContentCalendar(input, count = 7) {
       objective: `Creer un post ${goalCopy.label} pour ${audience}`,
       prompt: `Racontez ${topic} sous l'angle "${angle}" avec une accroche forte, une tension client et une invitation a discuter.`,
       cta: `Inviter ${audience} a demander la checklist ou un audit.`,
+    };
+  });
+}
+
+export function generateAutopilotPlan(input, options = {}) {
+  const cadenceKey = clean(options.cadence ?? input?.cadence, "three_per_week");
+  const cadence = getCadence(cadenceKey);
+  const itemCount = Math.max(1, Math.min(Number(options.count) || cadence.count, 30));
+  const startDate = options.startDate ? new Date(options.startDate) : new Date();
+  const topic = normalizeLine(input?.topic);
+  const audience = normalizeLine(input?.audience);
+
+  if (!topic) {
+    throw new Error("Le sujet est obligatoire pour generer un plan automatique.");
+  }
+
+  if (!audience) {
+    throw new Error("L'audience est obligatoire pour generer un plan automatique.");
+  }
+
+  return Array.from({ length: itemCount }, (_, index) => {
+    const angle = CONTENT_ANGLES[index % CONTENT_ANGLES.length];
+    const publishOn = addDays(startDate, index * cadence.intervalDays);
+    const details = [normalizeLine(input?.details), `angle editorial : ${angle}`]
+      .filter(Boolean)
+      .join(" ; ");
+    const post = generateLinkedInPost({
+      ...input,
+      topic,
+      audience,
+      details,
+      length: input?.length || (index % 2 === 0 ? "medium" : "long"),
+    });
+
+    return {
+      slot: index + 1,
+      publishOn: formatDate(publishOn),
+      cadence: cadence.label,
+      angle,
+      title: `${sentenceCase(angle)} - ${topic}`,
+      status: "pret a publier",
+      post,
     };
   });
 }
