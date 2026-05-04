@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PostPilot AI genere automatiquement des posts LinkedIn performants pour les fondateurs, freelances et equipes marketing."
+    />
+    <title>PostPilot AI - SaaS de generation LinkedIn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav container" aria-label="Navigation principale">
+        <a class="brand" href="#top" aria-label="PostPilot AI accueil">
+          <span class="brand-mark">P</span>
+          <span>PostPilot AI</span>
+        </a>
+        <div class="nav-links">
+          <a href="#features">Fonctionnalites</a>
+          <a href="#generator">Generateur</a>
+          <a href="#pricing">Tarifs</a>
+        </div>
+        <a class="nav-cta" href="#generator">Essayer gratis</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero container">
+        <div class="hero-copy">
+          <p class="eyebrow">SaaS LinkedIn pour createurs occupes</p>
+          <h1>Generez des posts LinkedIn prets a publier en moins d'une minute.</h1>
+          <p class="hero-text">
+            PostPilot AI transforme une idee brute en accroche, storytelling, call-to-action,
+            hashtags et calendrier editorial. Ideal pour garder une presence LinkedIn reguliere
+            sans repartir de zero chaque jour.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#generator">Generer un post</a>
+            <a class="button secondary" href="#demo">Voir un exemple</a>
+          </div>
+          <div class="hero-stats" aria-label="Statistiques produit">
+            <div>
+              <strong>12</strong>
+              <span>angles de contenu</span>
+            </div>
+            <div>
+              <strong>30j</strong>
+              <span>planning editable</span>
+            </div>
+            <div>
+              <strong>0</strong>
+              <span>dependance serveur</span>
+            </div>
+          </div>
+        </div>
+        <aside class="hero-card" id="demo" aria-label="Exemple de post LinkedIn">
+          <div class="post-preview">
+            <div class="post-author">
+              <div class="avatar">AI</div>
+              <div>
+                <strong>Votre prochaine publication</strong>
+                <span>Generee par PostPilot AI</span>
+              </div>
+            </div>
+            <p class="preview-hook">"J'ai arrete de vendre mes services. Voici ce qui a change."</p>
+            <p>
+              Pendant des mois, mes posts parlaient de mes offres. Peu d'engagement. Puis j'ai
+              commence a documenter les problemes reels que je resolvais...
+            </p>
+            <button class="ghost-button" type="button">Copier le post</button>
+          </div>
+        </aside>
+      </section>
+
+      <section class="logo-strip" aria-label="Profils cibles">
+        <span>Fondateurs</span>
+        <span>Freelances</span>
+        <span>Consultants</span>
+        <span>Agences</span>
+        <span>Sales B2B</span>
+      </section>
+
+      <section class="features container" id="features">
+        <div class="section-heading">
+          <p class="eyebrow">Du brouillon au planning</p>
+          <h2>Tout ce qu'il faut pour publier regulierement.</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <span class="feature-icon">01</span>
+            <h3>Posts personnalises</h3>
+            <p>
+              Choisissez votre audience, votre ton et votre objectif pour obtenir un post adapte a
+              votre positionnement.
+            </p>
+          </article>
+          <article>
+            <span class="feature-icon">02</span>
+            <h3>Calendrier editorial</h3>
+            <p>
+              Generez plusieurs idees de posts avec angles, objectifs et jours de publication
+              recommandes.
+            </p>
+          </article>
+          <article>
+            <span class="feature-icon">03</span>
+            <h3>Export rapide</h3>
+            <p>
+              Copiez un post, telechargez vos generations en JSON et gardez votre historique en
+              local.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="app-shell container" id="generator" aria-labelledby="generator-title">
+        <div class="section-heading">
+          <p class="eyebrow">Studio de generation</p>
+          <h2 id="generator-title">Creez votre prochain post LinkedIn.</h2>
+          <p>
+            Remplissez le brief. Le moteur local cree une version structuree que vous pouvez
+            ajuster avant publication.
+          </p>
+        </div>
+
+        <div class="workspace">
+          <form class="brief-card" id="post-form">
+            <label>
+              Idee ou sujet principal
+              <textarea
+                id="topic"
+                name="topic"
+                rows="4"
+                required
+                placeholder="Ex: Comment j'ai trouve mes 10 premiers clients B2B sans publicite"
+              ></textarea>
+            </label>
+
+            <div class="form-grid">
+              <label>
+                Audience
+                <input
+                  id="audience"
+                  name="audience"
+                  type="text"
+                  required
+                  placeholder="Ex: fondateurs SaaS early-stage"
+                />
+              </label>
+
+              <label>
+                Objectif
+                <select id="goal" name="goal">
+                  <option value="education">Eduquer</option>
+                  <option value="authority">Construire l'autorite</option>
+                  <option value="lead">Generer des leads</option>
+                  <option value="story">Partager une histoire</option>
+                  <option value="launch">Annoncer un lancement</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                Ton
+                <select id="tone" name="tone">
+                  <option value="direct">Direct et clair</option>
+                  <option value="storytelling">Storytelling</option>
+                  <option value="expert">Expert</option>
+                  <option value="contrarian">Contrarien</option>
+                  <option value="friendly">Accessible</option>
+                </select>
+              </label>
+
+              <label>
+                Longueur
+                <select id="length" name="length">
+                  <option value="short">Court</option>
+                  <option value="medium" selected>Moyen</option>
+                  <option value="long">Long</option>
+                </select>
+              </label>
+            </div>
+
+            <label>
+              Details optionnels
+              <input
+                id="details"
+                name="details"
+                type="text"
+                placeholder="Ex: inclure 3 conseils pratiques et une invitation a commenter"
+              />
+            </label>
+
+            <div class="actions-row">
+              <button class="button primary" type="submit">Generer le post</button>
+              <button class="button secondary" id="calendar-button" type="button">
+                Generer 7 idees
+              </button>
+            </div>
+          </form>
+
+          <section class="result-card" aria-live="polite">
+            <div class="result-header">
+              <div>
+                <p class="eyebrow">Resultat</p>
+                <h3>Post LinkedIn</h3>
+              </div>
+              <div class="result-actions">
+                <button class="icon-button" id="copy-button" type="button">Copier</button>
+                <button class="icon-button" id="download-button" type="button">JSON</button>
+              </div>
+            </div>
+            <pre id="post-output">Votre post genere apparaitra ici.</pre>
+          </section>
+        </div>
+
+        <section class="calendar-card" aria-labelledby="calendar-title">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Planning</p>
+              <h3 id="calendar-title">Idees de posts pour la semaine</h3>
+            </div>
+            <button class="icon-button" id="clear-history-button" type="button">
+              Effacer l'historique
+            </button>
+          </div>
+          <div class="calendar-grid" id="calendar-output"></div>
+        </section>
+      </section>
+
+      <section class="pricing container" id="pricing">
+        <div class="section-heading">
+          <p class="eyebrow">Monetisation SaaS</p>
+          <h2>Des offres simples pour transformer le MVP en business.</h2>
+        </div>
+        <div class="pricing-grid">
+          <article>
+            <h3>Starter</h3>
+            <p class="price">19 EUR<span>/mois</span></p>
+            <ul>
+              <li>50 generations mensuelles</li>
+              <li>Historique local</li>
+              <li>Exports JSON</li>
+            </ul>
+          </article>
+          <article class="highlighted">
+            <h3>Pro</h3>
+            <p class="price">49 EUR<span>/mois</span></p>
+            <ul>
+              <li>Posts illimites</li>
+              <li>Calendrier editorial</li>
+              <li>Templates par objectif</li>
+            </ul>
+          </article>
+          <article>
+            <h3>Equipe</h3>
+            <p class="price">149 EUR<span>/mois</span></p>
+            <ul>
+              <li>Workspaces clients</li>
+              <li>Validation marketing</li>
+              <li>Support prioritaire</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <span>PostPilot AI - MVP SaaS LinkedIn</span>
+        <a href="#generator">Lancer le generateur</a>
+      </div>
+    </footer>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
