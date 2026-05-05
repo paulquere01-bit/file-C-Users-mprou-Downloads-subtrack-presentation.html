@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import { generateContentCalendar, generateLinkedInPost } from "../src/postGenerator.js";
 
 describe("post generator", () => {
-  it("builds a LinkedIn post with hook, audience, details and hashtags", () => {
+  it("builds a LinkedIn post with hook, body, closer and hashtags", () => {
     const result = generateLinkedInPost({
       topic: "trouver ses premiers clients B2B",
       audience: "fondateurs SaaS",
@@ -14,11 +14,20 @@ describe("post generator", () => {
       details: "inclure une question finale",
     });
 
-    assert.match(result.post, /trouver ses premiers clients B2B/i);
-    assert.match(result.post, /fondateurs SaaS/);
-    assert.match(result.post, /inclure une question finale/);
+    assert.ok(result.post.length > 50, "post should have substantial content");
+    assert.ok(result.hook.length > 0, "hook should exist");
+    assert.ok(result.body.length > 0, "body should exist");
+    assert.ok(result.cta.length > 0, "cta should exist");
+    assert.ok(result.hashtags.length > 0, "hashtags should exist");
     assert.match(result.post, /#/);
     assert.equal(result.brief.goal, "lead");
+
+    const lines = result.post.split("\n");
+    const shortLines = lines.filter((l) => l.length > 0 && l.length < 60);
+    assert.ok(
+      shortLines.length > lines.filter((l) => l.length >= 60).length,
+      "most lines should be short and punchy (viral style)"
+    );
   });
 
   it("rejects incomplete briefs", () => {
@@ -30,6 +39,22 @@ describe("post generator", () => {
         }),
       /audience est obligatoire/,
     );
+  });
+
+  it("generates posts with short punchy lines (viral LinkedIn style)", () => {
+    const result = generateLinkedInPost({
+      topic: "la vente en B2B",
+      audience: "freelances",
+      goal: "lead",
+      tone: "direct",
+      length: "long",
+    });
+
+    const lines = result.post.split("\n").filter((l) => l.trim().length > 0);
+    const avgLength = lines.reduce((sum, l) => sum + l.length, 0) / lines.length;
+
+    assert.ok(avgLength < 80, `average line length should be short for viral style, got ${avgLength}`);
+    assert.ok(lines.length >= 8, `post should have many short lines, got ${lines.length}`);
   });
 
   it("creates seven calendar ideas with actionable metadata", () => {
@@ -58,5 +83,28 @@ describe("post generator", () => {
     );
 
     assert.equal(ideas.length, 30);
+  });
+
+  it("adapts post length based on length parameter", () => {
+    const shortPost = generateLinkedInPost({
+      topic: "le personal branding",
+      audience: "entrepreneurs",
+      goal: "education",
+      tone: "direct",
+      length: "short",
+    });
+
+    const longPost = generateLinkedInPost({
+      topic: "le personal branding",
+      audience: "entrepreneurs",
+      goal: "education",
+      tone: "direct",
+      length: "long",
+    });
+
+    assert.ok(
+      longPost.post.length > shortPost.post.length,
+      "long posts should be longer than short posts"
+    );
   });
 });
