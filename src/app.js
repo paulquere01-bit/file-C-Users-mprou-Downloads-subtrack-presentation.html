@@ -127,7 +127,7 @@ function flashButtonLabel(button, label) {
   button.textContent = label;
   window.setTimeout(() => {
     button.textContent = initialLabel;
-  }, 1600);
+  }, 2400);
 }
 
 function getPreviewPostText() {
@@ -199,6 +199,7 @@ downloadButton.addEventListener("click", () => {
     },
     "postpilot-export.json",
   );
+  flashButtonLabel(downloadButton, "JSON exporte");
 });
 
 clearHistoryButton.addEventListener("click", () => {
