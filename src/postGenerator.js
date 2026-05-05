@@ -1,43 +1,97 @@
-const GOAL_COPY = {
-  education: {
-    label: "education",
-    hook: "La plupart des gens compliquent ce sujet, alors qu'il peut devenir simple.",
-    cta: "Quel conseil ajouteriez-vous a cette liste ?",
-  },
-  authority: {
-    label: "autorite",
-    hook: "Voici une conviction que je repete souvent a mes clients.",
-    cta: "Si vous voulez que je detaille ma methode, dites-le en commentaire.",
-  },
-  lead: {
-    label: "generation de leads",
-    hook: "Si vous essayez d'obtenir plus d'opportunites, commencez par ce diagnostic.",
-    cta: "Commentez \"audit\" si vous voulez recevoir la checklist.",
-  },
-  story: {
-    label: "storytelling",
-    hook: "J'ai longtemps pense que le probleme venait de l'algorithme. En realite, il venait du message.",
-    cta: "Vous avez deja vecu ca ? Racontez-moi votre experience.",
-  },
-  launch: {
-    label: "lancement",
-    hook: "On vient de lancer quelque chose qui peut faire gagner beaucoup de temps.",
-    cta: "Envoyez-moi un message si vous voulez le tester en avant-premiere.",
-  },
+const HOOKS = {
+  education: [
+    (topic) => `La majorite des gens echouent sur ${topic}.\nPour une raison simple :`,
+    (topic) => `${sentenceCase(topic)} ?\n\nTout le monde en parle.\nPeu de gens le font bien.`,
+    (topic) => `J'ai passe des mois a galerrer sur ${topic}.\nPuis j'ai compris un truc simple.`,
+  ],
+  authority: [
+    (topic) => `Personne ne vous le dit.\nMais ${topic}, ca ne fonctionne pas comme vous croyez.`,
+    (topic) => `On m'a demande mon avis sur ${topic}.\nVoici ce que je reponds a chaque fois.`,
+    (topic) => `${sentenceCase(topic)} ?\n\nJ'ai une conviction forte la-dessus.`,
+  ],
+  lead: [
+    (topic) => `Personne n'aime qu'on lui vende.\nMais tout le monde aime acheter.\n\n${sentenceCase(topic)} :`,
+    (topic) => `Vous perdez des opportunites sur ${topic}.\nPas parce que vous etes mauvais.\nParce que vous parlez trop de vous.`,
+    (topic) => `Vos prospects s'en fichent de vos features.\nIls veulent savoir une seule chose :\nEst-ce que vous comprenez leur probleme ?`,
+  ],
+  story: [
+    (topic) => `Il y a 6 mois, j'ai tout change sur ${topic}.\nVoila ce qui s'est passe.`,
+    (topic) => `J'ai longtemps cru que ${topic} etait une question de talent.\nJ'avais tort.`,
+    (topic) => `Le jour ou j'ai arrete de forcer sur ${topic}.\nTout a change.`,
+  ],
+  launch: [
+    (topic) => `On a construit quelque chose.\nPas un outil de plus.\nUne solution a un vrai probleme : ${topic}.`,
+    (topic) => `Ca fait des mois qu'on travaille dessus.\n${sentenceCase(topic)} vient de sortir.`,
+    (topic) => `J'annonce rarement ce genre de chose.\nMais la, c'est different.\n\n${sentenceCase(topic)}.`,
+  ],
 };
 
-const TONE_COPY = {
-  direct: "Soyez concret, evitez le jargon et donnez une prochaine action claire.",
-  storytelling: "Racontez le contexte, la tension, puis la lecon apprise.",
-  expert: "Cadrez le probleme, partagez un raisonnement et montrez votre methode.",
-  contrarian: "Remettez en question une idee recue sans devenir agressif.",
-  friendly: "Gardez un ton accessible, humain et encourageant.",
+const BODY_BUILDERS = {
+  education: buildEducationBody,
+  authority: buildAuthorityBody,
+  lead: buildLeadBody,
+  story: buildStoryBody,
+  launch: buildLaunchBody,
 };
 
-const LENGTH_LINES = {
-  short: 3,
-  medium: 5,
-  long: 7,
+const CLOSERS = {
+  education: [
+    (topic) => `Si tu veux progresser sur ${topic}, arrete de chercher la methode parfaite.\nCommence par appliquer les bases.`,
+    (topic) => `Le secret sur ${topic} ?\nIl n'y en a pas.\nJuste de la regularite et du bon sens.`,
+  ],
+  authority: [
+    (topic) => `${sentenceCase(topic)} ne demande pas plus d'efforts.\nJuste une meilleure direction.`,
+    () => `Pas besoin de tout reinventer.\nJuste de voir les choses autrement.`,
+  ],
+  lead: [
+    () => `Pas besoin de manipuler.\nPas besoin de forcer.\nPas besoin de closer comme un bourrin.\n\nJuste une chose :\nDire les bonnes verites aux bonnes personnes.`,
+    (topic) => `Si tu veux vendre plus sur ${topic}, arrete de parler.\nCommence a comprendre.`,
+  ],
+  story: [
+    () => `Ce jour-la, j'ai compris un truc.\nLe resultat ne vient pas de l'effort.\nIl vient de la clarte.`,
+    (topic) => `La lecon ?\n${sentenceCase(topic)} ne se force pas.\nCa se construit, un jour a la fois.`,
+  ],
+  launch: [
+    () => `Si ca vous parle, essayez.\nSi ca ne vous parle pas, ce n'est pas pour vous.\nEt c'est ok.`,
+    (topic) => `On ne promet pas la lune.\nJuste un outil qui resout un vrai probleme sur ${topic}.`,
+  ],
+};
+
+const CTAS = {
+  education: [
+    "Tu veux que je developpe un de ces points ? Dis-le en commentaire.",
+    "Quel point te parle le plus ? Je detaille dans un prochain post.",
+  ],
+  authority: [
+    "D'accord ? Pas d'accord ? Je veux votre avis en commentaire.",
+    "Si vous voulez que je detaille ma methode, dites-le moi.",
+  ],
+  lead: [
+    "Commentez \"GO\" si vous voulez que je vous envoie la checklist.",
+    "Envoyez-moi un message si vous voulez en discuter.",
+  ],
+  story: [
+    "Vous avez deja vecu ca ?\nRacontez-moi en commentaire.",
+    "Ca vous parle ? Partagez votre experience.",
+  ],
+  launch: [
+    "Envoyez-moi un DM si vous voulez tester.",
+    "Lien en commentaire pour ceux que ca interesse.",
+  ],
+};
+
+const TONE_MODIFIERS = {
+  direct: { style: "short", emoji: false },
+  storytelling: { style: "narrative", emoji: false },
+  expert: { style: "structured", emoji: false },
+  contrarian: { style: "provoc", emoji: false },
+  friendly: { style: "warm", emoji: true },
+};
+
+const LENGTH_CONFIG = {
+  short: { bodyBlocks: 2, listItems: 3 },
+  medium: { bodyBlocks: 3, listItems: 4 },
+  long: { bodyBlocks: 4, listItems: 5 },
 };
 
 const CONTENT_ANGLES = [
@@ -61,59 +115,143 @@ function createId() {
   if (globalThis.crypto?.randomUUID) {
     return globalThis.crypto.randomUUID();
   }
-
   return `post_${Date.now()}_${Math.random().toString(16).slice(2)}`;
 }
 
 function sentenceCase(value) {
   const text = clean(value);
-  if (!text) {
-    return "";
-  }
-
+  if (!text) return "";
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
 }
 
-function splitTopic(topic) {
-  return clean(topic)
-    .split(/[.!?\n]/)
-    .map((part) => part.trim())
-    .filter(Boolean);
+function pickRandom(arr, seed) {
+  const index = Math.abs(hashCode(seed)) % arr.length;
+  return arr[index];
 }
 
-function buildBodyLines({ topic, audience, details, goal, tone, length }) {
+function hashCode(str) {
+  let hash = 0;
+  const s = String(str);
+  for (let i = 0; i < s.length; i++) {
+    hash = ((hash << 5) - hash + s.charCodeAt(i)) | 0;
+  }
+  return hash;
+}
+
+function extractKeywords(topic) {
+  return clean(topic)
+    .split(/[\s,.:;!?]+/)
+    .filter((w) => w.length > 3)
+    .slice(0, 5);
+}
+
+function buildEducationBody({ topic, audience, details, length, tone }) {
+  const config = LENGTH_CONFIG[length] || LENGTH_CONFIG.medium;
+  const keywords = extractKeywords(topic);
   const lines = [];
-  const topicParts = splitTopic(topic);
-  const mainTopic = sentenceCase(topicParts[0] || topic);
-  const targetAudience = clean(audience, "votre audience");
-  const detailText = clean(details);
-  const wantedLines = LENGTH_LINES[length] || LENGTH_LINES.medium;
 
-  lines.push(`${mainTopic}.`);
-  lines.push(`Pour ${targetAudience}, le vrai enjeu n'est pas de publier plus, mais de publier avec un angle clair.`);
-
-  if (goal === "lead") {
-    lines.push("Le signal le plus fort vient souvent d'un post qui nomme un probleme precis et propose une prochaine etape simple.");
-  } else if (goal === "launch") {
-    lines.push("Un bon lancement ne liste pas seulement des fonctionnalites : il montre le changement concret pour l'utilisateur.");
-  } else if (goal === "story") {
-    lines.push("Le declic arrive quand vous reliez une experience personnelle a une lecon utile pour le lecteur.");
+  if (TONE_MODIFIERS[tone]?.style === "provoc") {
+    lines.push(`La majorite des ${clean(audience, "gens")} font la meme erreur.`);
+    lines.push(`Ils pensent que c'est une question de quantite.\nAlors que c'est une question de clarte.`);
   } else {
-    lines.push("La difference se joue dans la clarte : un probleme, une idee, une action.");
+    lines.push(`La majorite des ${clean(audience, "gens")} compliquent les choses.`);
+    lines.push(`Ils veulent tout faire en meme temps.\nResultat : rien n'avance.`);
   }
 
-  lines.push(`Angle recommande : ${TONE_COPY[tone] || TONE_COPY.direct}`);
-
-  if (detailText) {
-    lines.push(`A integrer : ${detailText}.`);
+  const mistakes = keywords.slice(0, config.listItems).map((k) => `Ils se focalisent sur ${k}`);
+  if (mistakes.length > 0) {
+    lines.push(mistakes.join("\n"));
+    lines.push(`Et ils s'etonnent que ca ne marche pas.`);
   }
 
-  lines.push("Structure simple a utiliser :");
-  lines.push("1. Decrivez le probleme en une phrase.");
-  lines.push("2. Partagez ce que vous avez appris.");
-  lines.push("3. Terminez avec une question qui lance la conversation.");
+  lines.push(`La verite ?\n${sentenceCase(topic)}, c'est simple quand on a le bon angle.`);
 
-  return lines.slice(0, wantedLines + 2);
+  if (details) {
+    lines.push(`A retenir : ${details}.`);
+  }
+
+  return lines.slice(0, config.bodyBlocks + 2);
+}
+
+function buildAuthorityBody({ topic, audience, details, length, tone }) {
+  const config = LENGTH_CONFIG[length] || LENGTH_CONFIG.medium;
+  const lines = [];
+
+  lines.push(`Ce n'est pas ce que vous pensez.\nCe n'est pas ${topic} le probleme.`);
+  lines.push(`Le probleme, c'est l'approche.`);
+
+  if (TONE_MODIFIERS[tone]?.style === "structured") {
+    lines.push(`Voici comment je vois les choses :\n\n– Le cadre compte plus que l'outil\n– La regularite bat l'intensite\n– La clarte bat la complexite`);
+  } else {
+    lines.push(`Un bon ${clean(audience, "professionnel")} ne pousse pas.\nIl revele.`);
+    lines.push(`Il montre a quelqu'un :\n– Ce qui lui coute deja cher\n– Ce qu'il tolere par habitude\n– Ce qu'il pourrait avoir de mieux`);
+  }
+
+  if (details) {
+    lines.push(details + ".");
+  }
+
+  return lines.slice(0, config.bodyBlocks + 2);
+}
+
+function buildLeadBody({ topic, audience, details, length, tone }) {
+  const config = LENGTH_CONFIG[length] || LENGTH_CONFIG.medium;
+  const lines = [];
+
+  lines.push(`La majorite des ${clean(audience, "gens")} vendent mal pour une raison simple :\nIls parlent trop d'eux.`);
+
+  const badList = [
+    "Leur produit",
+    "Leurs features",
+    "Leurs prix",
+    "Leur offre",
+    "Leur methode",
+  ];
+  lines.push(badList.slice(0, config.listItems).join("\n"));
+  lines.push(`Et ils s'etonnent que personne n'achete.`);
+
+  if (TONE_MODIFIERS[tone]?.style === "provoc") {
+    lines.push(`La vente, ce n'est pas convaincre.\nC'est faire se reconnaitre.`);
+  } else {
+    lines.push(`Un bon vendeur ne pousse pas.\nIl revele.`);
+  }
+
+  if (details) {
+    lines.push(details + ".");
+  }
+
+  return lines.slice(0, config.bodyBlocks + 2);
+}
+
+function buildStoryBody({ topic, audience, details, length }) {
+  const config = LENGTH_CONFIG[length] || LENGTH_CONFIG.medium;
+  const lines = [];
+
+  lines.push(`Pendant des mois, je faisais comme tout le monde.\nJe suivais les "bonnes pratiques".\nResultat : zero.`);
+  lines.push(`Puis un jour, j'ai decide de changer d'approche sur ${topic}.`);
+  lines.push(`Pas un pivot radical.\nJuste un ajustement de perspective.`);
+  lines.push(`Le resultat ?\nPlus de clarte.\nPlus de resultats.\nMoins d'effort.`);
+
+  if (details) {
+    lines.push(details + ".");
+  }
+
+  return lines.slice(0, config.bodyBlocks + 2);
+}
+
+function buildLaunchBody({ topic, audience, details, length }) {
+  const config = LENGTH_CONFIG[length] || LENGTH_CONFIG.medium;
+  const lines = [];
+
+  lines.push(`Le constat etait simple :\nLes ${clean(audience, "gens")} perdent du temps sur ${topic}.\nTous les jours.`);
+  lines.push(`On a construit une solution.\nPas un gadget.\nUn outil qui resout un vrai probleme.`);
+  lines.push(`Ce que ca change :\n– Moins de temps perdu\n– Plus de clarte\n– Des resultats mesurables`);
+
+  if (details) {
+    lines.push(details + ".");
+  }
+
+  return lines.slice(0, config.bodyBlocks + 2);
 }
 
 function buildHashtags(topic, audience, goal) {
@@ -127,7 +265,7 @@ function buildHashtags(topic, audience, goal) {
   const topicalTags = uniqueWords.slice(0, 2).map((word) => `#${word}`);
   const goalTag = goal === "lead" ? "#prospection" : goal === "launch" ? "#lancement" : "#linkedin";
 
-  return Array.from(new Set(["#LinkedIn", goalTag, ...topicalTags])).slice(0, 5);
+  return Array.from(new Set(["#LinkedIn", goalTag, ...topicalTags])).slice(0, 4);
 }
 
 export function generateLinkedInPost(input) {
@@ -146,26 +284,33 @@ export function generateLinkedInPost(input) {
     throw new Error("L'audience est obligatoire pour generer un post.");
   }
 
-  const goalCopy = GOAL_COPY[goal] || GOAL_COPY.education;
-  const hook = `${goalCopy.hook}\n\nSujet : ${sentenceCase(topic)}`;
-  const body = buildBodyLines({ topic, audience, details, goal, tone, length }).join("\n\n");
+  const seed = `${topic}-${goal}-${tone}`;
+  const hooks = HOOKS[goal] || HOOKS.education;
+  const hookFn = pickRandom(hooks, seed);
+  const hook = hookFn(topic);
+
+  const bodyBuilder = BODY_BUILDERS[goal] || buildEducationBody;
+  const bodyLines = bodyBuilder({ topic, audience, details, goal, tone, length });
+  const body = bodyLines.join("\n\n");
+
+  const closers = CLOSERS[goal] || CLOSERS.education;
+  const closerFn = pickRandom(closers, seed + "closer");
+  const closer = closerFn(topic);
+
+  const ctas = CTAS[goal] || CTAS.education;
+  const cta = pickRandom(ctas, seed + "cta");
+
   const hashtags = buildHashtags(topic, audience, goal);
-  const post = `${hook}\n\n${body}\n\n${goalCopy.cta}\n\n${hashtags.join(" ")}`;
+
+  const post = [hook, body, closer, cta, hashtags.join(" ")].join("\n\n");
 
   return {
     id: createId(),
     createdAt: new Date().toISOString(),
-    brief: {
-      topic,
-      audience,
-      goal,
-      tone,
-      length,
-      details,
-    },
+    brief: { topic, audience, goal, tone, length, details },
     hook,
     body,
-    cta: goalCopy.cta,
+    cta,
     hashtags,
     post,
   };
@@ -180,13 +325,17 @@ export function generateContentCalendar(input, count = 7) {
   return Array.from({ length: itemCount }, (_, index) => {
     const angle = CONTENT_ANGLES[index % CONTENT_ANGLES.length];
     const day = WEEK_DAYS[index % WEEK_DAYS.length];
-    const goalCopy = GOAL_COPY[goal] || GOAL_COPY.education;
+    const goalLabel = goal === "lead" ? "generation de leads"
+      : goal === "authority" ? "autorite"
+      : goal === "story" ? "storytelling"
+      : goal === "launch" ? "lancement"
+      : "education";
 
     return {
       day,
       angle,
       title: `${sentenceCase(angle)} : ${topic}`,
-      objective: `Creer un post ${goalCopy.label} pour ${audience}`,
+      objective: `Creer un post ${goalLabel} pour ${audience}`,
       prompt: `Expliquez ${topic} sous l'angle "${angle}" avec un exemple concret et une question finale.`,
       cta: `Inviter ${audience} a partager son experience.`,
     };
@@ -194,9 +343,6 @@ export function generateContentCalendar(input, count = 7) {
 }
 
 export function formatPostForDisplay(result) {
-  if (!result?.post) {
-    return "";
-  }
-
+  if (!result?.post) return "";
   return result.post;
 }
