@@ -21,6 +21,23 @@ describe("post generator", () => {
     assert.equal(result.brief.goal, "lead");
   });
 
+  it("does not truncate numbered structure steps", () => {
+    for (const length of ["short", "medium", "long"]) {
+      const result = generateLinkedInPost({
+        topic: "ameliorer son contenu LinkedIn",
+        audience: "freelances",
+        goal: "education",
+        tone: "expert",
+        length,
+      });
+      const hasStructureHeading = result.body.includes("Structure simple a utiliser :");
+
+      assert.equal(result.body.includes("1. Decrivez"), hasStructureHeading);
+      assert.equal(result.body.includes("2. Partagez"), hasStructureHeading);
+      assert.equal(result.body.includes("3. Terminez"), hasStructureHeading);
+    }
+  });
+
   it("rejects incomplete briefs", () => {
     assert.throws(
       () =>
