@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { generateContentCalendar, generateLinkedInPost } from "../src/postGenerator.js";
+import {
+  generateAutomaticCampaign,
+  generateContentCalendar,
+  generateLinkedInPost,
+} from "../src/postGenerator.js";
 
 describe("post generator", () => {
   it("builds a LinkedIn post with hook, audience, details and hashtags", () => {
@@ -58,5 +62,22 @@ describe("post generator", () => {
     );
 
     assert.equal(ideas.length, 30);
+  });
+
+  it("creates an automatic campaign with scheduled posts and follow-up actions", () => {
+    const campaign = generateAutomaticCampaign({
+      topic: "creer un SaaS sans backend",
+      audience: "independants",
+      goal: "authority",
+      tone: "expert",
+      length: "short",
+    });
+
+    assert.equal(campaign.posts.length, 7);
+    assert.match(campaign.summary, /7 posts LinkedIn/);
+    assert.match(campaign.posts[0].scheduledAt, /Lundi/);
+    assert.match(campaign.posts[0].post, /creer un SaaS sans backend/i);
+    assert.equal(campaign.posts[0].automationChecklist.length, 3);
+    assert.ok(campaign.nextActions.length > 0);
   });
 });

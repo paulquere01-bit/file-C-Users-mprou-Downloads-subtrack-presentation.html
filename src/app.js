@@ -1,5 +1,6 @@
 import {
   formatPostForDisplay,
+  generateAutomaticCampaign,
   generateContentCalendar,
   generateLinkedInPost,
 } from "./postGenerator.js";
@@ -10,12 +11,16 @@ const form = document.querySelector("#post-form");
 const postOutput = document.querySelector("#post-output");
 const calendarOutput = document.querySelector("#calendar-output");
 const calendarButton = document.querySelector("#calendar-button");
+const autopilotButton = document.querySelector("#autopilot-button");
 const copyButton = document.querySelector("#copy-button");
 const downloadButton = document.querySelector("#download-button");
 const clearHistoryButton = document.querySelector("#clear-history-button");
+const autopilotOutput = document.querySelector("#autopilot-output");
+const autopilotSummary = document.querySelector("#autopilot-summary");
 
 let currentPost = null;
 let currentCalendar = [];
+let currentCampaign = null;
 
 function createId() {
   if (globalThis.crypto?.randomUUID) {
@@ -76,6 +81,64 @@ function renderCalendar(items) {
   });
 }
 
+function renderAutopilot(campaign) {
+  currentCampaign = campaign;
+  autopilotOutput.innerHTML = "";
+
+  if (!campaign?.posts?.length) {
+    autopilotSummary.textContent =
+      "Lancez le pilote automatique pour creer 7 posts planifies avec checklist de suivi.";
+    const emptyState = document.createElement("p");
+    emptyState.className = "empty-state";
+    emptyState.textContent = "Lancez le pilote automatique pour creer une semaine de posts prets a publier.";
+    autopilotOutput.append(emptyState);
+    return;
+  }
+
+  autopilotSummary.textContent = campaign.summary;
+
+  campaign.posts.forEach((post, index) => {
+    const card = document.createElement("article");
+    card.className = "autopilot-item";
+
+    const meta = document.createElement("div");
+    meta.className = "autopilot-meta";
+
+    const badge = document.createElement("span");
+    badge.textContent = `Post ${index + 1}`;
+
+    const schedule = document.createElement("strong");
+    schedule.textContent = post.scheduledAt;
+
+    meta.append(badge, schedule);
+
+    const title = document.createElement("h4");
+    title.textContent = post.title;
+
+    const preview = document.createElement("p");
+    preview.textContent = post.hook.replace(/\n+/g, " ");
+
+    const checklist = document.createElement("ul");
+    post.automationChecklist.forEach((item) => {
+      const action = document.createElement("li");
+      action.textContent = item;
+      checklist.append(action);
+    });
+
+    const useButton = document.createElement("button");
+    useButton.className = "ghost-button";
+    useButton.type = "button";
+    useButton.textContent = "Afficher ce post";
+    useButton.addEventListener("click", () => {
+      renderPost(post);
+      postOutput.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    card.append(meta, title, preview, checklist, useButton);
+    autopilotOutput.append(card);
+  });
+}
+
 function loadHistory() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
@@ -125,6 +188,14 @@ calendarButton.addEventListener("click", () => {
   renderCalendar(calendar);
 });
 
+autopilotButton.addEventListener("click", () => {
+  const campaign = generateAutomaticCampaign(getBriefFromForm());
+  renderAutopilot(campaign);
+  renderCalendar(campaign.calendar);
+  renderPost(campaign.posts[0]);
+  saveGeneration(campaign.posts[0]);
+});
+
 copyButton.addEventListener("click", async () => {
   if (!currentPost) {
     return;
@@ -142,6 +213,7 @@ downloadButton.addEventListener("click", () => {
     {
       post: currentPost,
       calendar: currentCalendar,
+      campaign: currentCampaign,
       exportedAt: new Date().toISOString(),
     },
     "postpilot-export.json",
@@ -157,3 +229,4 @@ clearHistoryButton.addEventListener("click", () => {
 });
 
 renderCalendar([]);
+renderAutopilot(null);

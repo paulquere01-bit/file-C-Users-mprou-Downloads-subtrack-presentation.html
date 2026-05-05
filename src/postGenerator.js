@@ -52,6 +52,36 @@ const CONTENT_ANGLES = [
 
 const WEEK_DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
+const POSTING_SLOTS = ["08:45", "11:30", "13:15", "17:45", "19:00"];
+
+const AUTOMATION_PLAYBOOK = {
+  education: [
+    "Transformer le post en checklist sauvegardable.",
+    "Relancer les commentaires avec une question precise.",
+    "Reposter le meilleur apprentissage dans 10 jours.",
+  ],
+  authority: [
+    "Ajouter une preuve ou un resultat client avant publication.",
+    "Identifier 5 prospects a taguer uniquement si c'est naturel.",
+    "Recycler le post en carrousel court.",
+  ],
+  lead: [
+    "Preparer une reponse type pour les commentaires entrants.",
+    "Envoyer la ressource promise aux personnes interessees.",
+    "Noter les objections pour un prochain post.",
+  ],
+  story: [
+    "Garder une phrase personnelle forte des les premieres lignes.",
+    "Repondre aux commentaires avec une anecdote supplementaire.",
+    "Transformer la lecon en framework le lendemain.",
+  ],
+  launch: [
+    "Ajouter un lien ou une consigne claire en premier commentaire.",
+    "Planifier un rappel 48h apres le lancement.",
+    "Collecter les questions pour enrichir la FAQ produit.",
+  ],
+};
+
 function clean(value, fallback = "") {
   const text = String(value ?? "").trim();
   return text || fallback;
@@ -130,6 +160,19 @@ function buildHashtags(topic, audience, goal) {
   return Array.from(new Set(["#LinkedIn", goalTag, ...topicalTags])).slice(0, 5);
 }
 
+function buildVariantBrief(baseBrief, calendarItem, index) {
+  const angleDetail = `Angle ${index + 1} : ${calendarItem.angle}. ${clean(baseBrief.details)}`;
+
+  return {
+    topic: `${calendarItem.angle} - ${clean(baseBrief.topic, calendarItem.title)}`,
+    audience: clean(baseBrief.audience, "votre audience"),
+    goal: clean(baseBrief.goal, "education"),
+    tone: clean(baseBrief.tone, "direct"),
+    length: clean(baseBrief.length, "medium"),
+    details: angleDetail.trim(),
+  };
+}
+
 export function generateLinkedInPost(input) {
   const topic = clean(input?.topic);
   const audience = clean(input?.audience);
@@ -191,6 +234,47 @@ export function generateContentCalendar(input, count = 7) {
       cta: `Inviter ${audience} a partager son experience.`,
     };
   });
+}
+
+export function generateAutomaticCampaign(input, count = 7) {
+  const calendar = generateContentCalendar(input, count);
+  const goal = clean(input?.goal, "education");
+  const playbook = AUTOMATION_PLAYBOOK[goal] || AUTOMATION_PLAYBOOK.education;
+
+  const posts = calendar.map((item, index) => {
+    const slot = POSTING_SLOTS[index % POSTING_SLOTS.length];
+    const scheduledAt = `${item.day} ${slot}`;
+    const post = generateLinkedInPost(buildVariantBrief(input, item, index));
+
+    return {
+      ...post,
+      angle: item.angle,
+      scheduledAt,
+      title: item.title,
+      automationChecklist: [
+        `Publier ${scheduledAt}.`,
+        playbook[index % playbook.length],
+        `Objectif : ${item.objective}.`,
+      ],
+    };
+  });
+
+  return {
+    id: createId(),
+    createdAt: new Date().toISOString(),
+    brief: {
+      topic: clean(input?.topic, "votre expertise"),
+      audience: clean(input?.audience, "votre audience"),
+      goal,
+      tone: clean(input?.tone, "direct"),
+      length: clean(input?.length, "medium"),
+      details: clean(input?.details),
+    },
+    summary: `Campagne automatique de ${posts.length} posts LinkedIn prets a publier.`,
+    posts,
+    calendar,
+    nextActions: playbook,
+  };
 }
 
 export function formatPostForDisplay(result) {

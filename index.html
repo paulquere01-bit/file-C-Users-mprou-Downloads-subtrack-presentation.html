@@ -36,11 +36,11 @@
       <section class="hero container">
         <div class="hero-copy">
           <p class="eyebrow">SaaS LinkedIn pour createurs occupes</p>
-          <h1>Generez des posts LinkedIn prets a publier en moins d'une minute.</h1>
+          <h1>Automatisez vos posts LinkedIn sans repartir de zero.</h1>
           <p class="hero-text">
-            PostPilot AI transforme une idee brute en accroche, storytelling, call-to-action,
-            hashtags et calendrier editorial. Ideal pour garder une presence LinkedIn reguliere
-            sans repartir de zero chaque jour.
+            PostPilot AI transforme une idee brute en campagne LinkedIn complete : posts prets a
+            publier, horaires recommandes, checklists de suivi et calendrier editorial. Ideal pour
+            garder une presence reguliere sans backend ni configuration complexe.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#generator">Generer un post</a>
@@ -48,12 +48,12 @@
           </div>
           <div class="hero-stats" aria-label="Statistiques produit">
             <div>
-              <strong>12</strong>
-              <span>angles de contenu</span>
+              <strong>7</strong>
+              <span>posts automatiques</span>
             </div>
             <div>
-              <strong>30j</strong>
-              <span>planning editable</span>
+              <strong>5</strong>
+              <span>creneaux optimises</span>
             </div>
             <div>
               <strong>0</strong>
@@ -106,16 +106,16 @@
             <span class="feature-icon">02</span>
             <h3>Calendrier editorial</h3>
             <p>
-              Generez plusieurs idees de posts avec angles, objectifs et jours de publication
-              recommandes.
+              Generez plusieurs idees de posts avec angles, objectifs, jours et horaires de
+              publication recommandes.
             </p>
           </article>
           <article>
             <span class="feature-icon">03</span>
             <h3>Export rapide</h3>
             <p>
-              Copiez un post, telechargez vos generations en JSON et gardez votre historique en
-              local.
+              Copiez un post, telechargez votre campagne automatique en JSON et gardez votre
+              historique en local.
             </p>
           </article>
         </div>
@@ -205,6 +205,9 @@
               <button class="button secondary" id="calendar-button" type="button">
                 Generer 7 idees
               </button>
+              <button class="button secondary" id="autopilot-button" type="button">
+                Lancer le pilote automatique
+              </button>
             </div>
           </form>
 
@@ -235,6 +238,19 @@
           </div>
           <div class="calendar-grid" id="calendar-output"></div>
         </section>
+
+        <section class="autopilot-card" aria-labelledby="autopilot-title">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Pilote automatique</p>
+              <h3 id="autopilot-title">Campagne LinkedIn prete a publier</h3>
+            </div>
+          </div>
+          <div class="autopilot-summary" id="autopilot-summary">
+            Lancez le pilote automatique pour creer 7 posts planifies avec checklist de suivi.
+          </div>
+          <div class="autopilot-grid" id="autopilot-output"></div>
+        </section>
       </section>
 
       <section class="pricing container" id="pricing">
@@ -257,7 +273,7 @@
             <p class="price">49 EUR<span>/mois</span></p>
             <ul>
               <li>Posts illimites</li>
-              <li>Calendrier editorial</li>
+              <li>Pilote automatique 7 posts</li>
               <li>Templates par objectif</li>
             </ul>
           </article>
