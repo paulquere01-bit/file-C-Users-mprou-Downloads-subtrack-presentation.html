@@ -87,7 +87,13 @@ function buildBodyLines({ topic, audience, details, goal, tone, length }) {
   const mainTopic = sentenceCase(topicParts[0] || topic);
   const targetAudience = clean(audience, "votre audience");
   const detailText = clean(details);
-  const wantedLines = LENGTH_LINES[length] || LENGTH_LINES.medium;
+  const maxLines = (LENGTH_LINES[length] || LENGTH_LINES.medium) + 2;
+  const structureLines = [
+    "Structure simple a utiliser :",
+    "1. Decrivez le probleme en une phrase.",
+    "2. Partagez ce que vous avez appris.",
+    "3. Terminez avec une question qui lance la conversation.",
+  ];
 
   lines.push(`${mainTopic}.`);
   lines.push(`Pour ${targetAudience}, le vrai enjeu n'est pas de publier plus, mais de publier avec un angle clair.`);
@@ -108,12 +114,11 @@ function buildBodyLines({ topic, audience, details, goal, tone, length }) {
     lines.push(`A integrer : ${detailText}.`);
   }
 
-  lines.push("Structure simple a utiliser :");
-  lines.push("1. Decrivez le probleme en une phrase.");
-  lines.push("2. Partagez ce que vous avez appris.");
-  lines.push("3. Terminez avec une question qui lance la conversation.");
+  if (lines.length + structureLines.length <= maxLines) {
+    lines.push(...structureLines);
+  }
 
-  return lines.slice(0, wantedLines + 2);
+  return lines.slice(0, maxLines);
 }
 
 function buildHashtags(topic, audience, goal) {

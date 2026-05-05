@@ -13,6 +13,10 @@ const calendarButton = document.querySelector("#calendar-button");
 const copyButton = document.querySelector("#copy-button");
 const downloadButton = document.querySelector("#download-button");
 const clearHistoryButton = document.querySelector("#clear-history-button");
+const demoCopyButton = document.querySelector("#demo-copy-button");
+const DEMO_POST = `"J'ai arrete de vendre mes services. Voici ce qui a change."
+
+Pendant des mois, mes posts parlaient de mes offres. Peu d'engagement. Puis j'ai commence a documenter les problemes reels que je resolvais...`;
 
 let currentPost = null;
 let currentCalendar = [];
@@ -113,6 +117,46 @@ function downloadJson(payload, filename) {
   URL.revokeObjectURL(url);
 }
 
+function copyTextWithFallback(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+
+  if (!copied) {
+    throw new Error("Unable to copy text.");
+  }
+}
+
+async function copyText(text, button, successLabel = "Copie") {
+  const originalLabel = button.textContent;
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      copyTextWithFallback(text);
+    }
+    button.textContent = successLabel;
+  } catch {
+    try {
+      copyTextWithFallback(text);
+      button.textContent = successLabel;
+    } catch {
+      button.textContent = "Copie impossible";
+    }
+  }
+
+  window.setTimeout(() => {
+    button.textContent = originalLabel;
+  }, 1600);
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const post = generateLinkedInPost(getBriefFromForm());
@@ -125,16 +169,16 @@ calendarButton.addEventListener("click", () => {
   renderCalendar(calendar);
 });
 
-copyButton.addEventListener("click", async () => {
+copyButton.addEventListener("click", () => {
   if (!currentPost) {
     return;
   }
 
-  await navigator.clipboard.writeText(formatPostForDisplay(currentPost));
-  copyButton.textContent = "Copie";
-  window.setTimeout(() => {
-    copyButton.textContent = "Copier";
-  }, 1600);
+  copyText(formatPostForDisplay(currentPost), copyButton);
+});
+
+demoCopyButton.addEventListener("click", () => {
+  copyText(DEMO_POST, demoCopyButton);
 });
 
 downloadButton.addEventListener("click", () => {
