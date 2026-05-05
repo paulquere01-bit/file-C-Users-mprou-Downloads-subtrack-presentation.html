@@ -10,9 +10,11 @@ const form = document.querySelector("#post-form");
 const postOutput = document.querySelector("#post-output");
 const calendarOutput = document.querySelector("#calendar-output");
 const calendarButton = document.querySelector("#calendar-button");
+const previewCopyButton = document.querySelector("#preview-copy-button");
 const copyButton = document.querySelector("#copy-button");
 const downloadButton = document.querySelector("#download-button");
 const clearHistoryButton = document.querySelector("#clear-history-button");
+const previewPost = document.querySelector("#demo .post-preview");
 
 let currentPost = null;
 let currentCalendar = [];
@@ -41,6 +43,7 @@ function getBriefFromForm() {
 function renderPost(post) {
   currentPost = post;
   postOutput.textContent = formatPostForDisplay(post);
+  setResultActionsEnabled(true);
 }
 
 function renderCalendar(items) {
@@ -113,6 +116,49 @@ function downloadJson(payload, filename) {
   URL.revokeObjectURL(url);
 }
 
+function setResultActionsEnabled(isEnabled) {
+  copyButton.disabled = !isEnabled;
+  downloadButton.disabled = !isEnabled;
+}
+
+function flashButtonLabel(button, label) {
+  const initialLabel = button.dataset.initialLabel || button.textContent;
+  button.dataset.initialLabel = initialLabel;
+  button.textContent = label;
+  window.setTimeout(() => {
+    button.textContent = initialLabel;
+  }, 1600);
+}
+
+function getPreviewPostText() {
+  return Array.from(previewPost.querySelectorAll(".preview-hook, p"))
+    .map((element) => element.textContent.trim())
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      // Fall back for browsers that expose clipboard but block it in this context.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  return copied;
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const post = generateLinkedInPost(getBriefFromForm());
@@ -123,6 +169,12 @@ form.addEventListener("submit", (event) => {
 calendarButton.addEventListener("click", () => {
   const calendar = generateContentCalendar(getBriefFromForm());
   renderCalendar(calendar);
+  flashButtonLabel(calendarButton, "7 idees generees");
+});
+
+previewCopyButton.addEventListener("click", async () => {
+  const copied = await copyText(getPreviewPostText());
+  flashButtonLabel(previewCopyButton, copied ? "Post copie" : "Copie impossible");
 });
 
 copyButton.addEventListener("click", async () => {
@@ -130,14 +182,15 @@ copyButton.addEventListener("click", async () => {
     return;
   }
 
-  await navigator.clipboard.writeText(formatPostForDisplay(currentPost));
-  copyButton.textContent = "Copie";
-  window.setTimeout(() => {
-    copyButton.textContent = "Copier";
-  }, 1600);
+  const copied = await copyText(formatPostForDisplay(currentPost));
+  flashButtonLabel(copyButton, copied ? "Copie" : "Copie impossible");
 });
 
 downloadButton.addEventListener("click", () => {
+  if (!currentPost) {
+    return;
+  }
+
   downloadJson(
     {
       post: currentPost,
@@ -150,10 +203,8 @@ downloadButton.addEventListener("click", () => {
 
 clearHistoryButton.addEventListener("click", () => {
   localStorage.removeItem(STORAGE_KEY);
-  clearHistoryButton.textContent = "Historique efface";
-  window.setTimeout(() => {
-    clearHistoryButton.textContent = "Effacer l'historique";
-  }, 1600);
+  flashButtonLabel(clearHistoryButton, "Historique efface");
 });
 
 renderCalendar([]);
+setResultActionsEnabled(false);
