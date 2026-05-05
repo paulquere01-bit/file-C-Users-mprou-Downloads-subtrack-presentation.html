@@ -295,6 +295,13 @@ h3 {
   color: var(--primary-dark);
 }
 
+.ghost-button:disabled,
+.icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  transform: none;
+}
+
 .ghost-button {
   width: 100%;
   padding: 13px 18px;
