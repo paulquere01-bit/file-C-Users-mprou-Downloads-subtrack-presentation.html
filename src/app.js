@@ -1,5 +1,6 @@
 import {
   formatPostForDisplay,
+  generateAutomaticLinkedInCampaign,
   generateContentCalendar,
   generateLinkedInPost,
 } from "./postGenerator.js";
@@ -10,6 +11,7 @@ const form = document.querySelector("#post-form");
 const postOutput = document.querySelector("#post-output");
 const calendarOutput = document.querySelector("#calendar-output");
 const calendarButton = document.querySelector("#calendar-button");
+const autopilotButton = document.querySelector("#autopilot-button");
 const copyButton = document.querySelector("#copy-button");
 const downloadButton = document.querySelector("#download-button");
 const clearHistoryButton = document.querySelector("#clear-history-button");
@@ -17,6 +19,7 @@ const demoCopyButton = document.querySelector("#demo-copy-button");
 const DEMO_POST = `"J'ai arrete de vendre mes services. Voici ce qui a change."
 
 Pendant des mois, mes posts parlaient de mes offres. Peu d'engagement. Puis j'ai commence a documenter les problemes reels que je resolvais...`;
+const AUTOPILOT_LABEL = "Lancer le pilote automatique";
 
 let currentPost = null;
 let currentCalendar = [];
@@ -40,6 +43,16 @@ function getBriefFromForm() {
     length: data.get("length"),
     details: data.get("details"),
   };
+}
+
+function populateBriefForm(brief) {
+  Object.entries(brief).forEach(([name, value]) => {
+    const field = form.elements.namedItem(name);
+
+    if (field) {
+      field.value = value;
+    }
+  });
 }
 
 function renderPost(post) {
@@ -167,6 +180,18 @@ form.addEventListener("submit", (event) => {
 calendarButton.addEventListener("click", () => {
   const calendar = generateContentCalendar(getBriefFromForm());
   renderCalendar(calendar);
+});
+
+autopilotButton.addEventListener("click", () => {
+  const campaign = generateAutomaticLinkedInCampaign();
+  populateBriefForm(campaign.brief);
+  renderPost(campaign.post);
+  renderCalendar(campaign.calendar);
+  saveGeneration(campaign.post);
+  autopilotButton.textContent = "Post et planning generes";
+  window.setTimeout(() => {
+    autopilotButton.textContent = AUTOPILOT_LABEL;
+  }, 1800);
 });
 
 copyButton.addEventListener("click", () => {

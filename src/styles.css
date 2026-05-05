@@ -236,6 +236,7 @@ h3 {
 }
 
 .hero-card,
+.autopilot-card,
 .brief-card,
 .result-card,
 .calendar-card,
@@ -357,6 +358,7 @@ h3 {
   gap: 22px;
 }
 
+.autopilot-card,
 .brief-card,
 .result-card,
 .calendar-card {
@@ -409,6 +411,24 @@ textarea:focus {
 .actions-row {
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.autopilot-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(238, 245, 255, 0.94));
+}
+
+.autopilot-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.autopilot-card .button {
+  flex: 0 0 auto;
 }
 
 .result-header {
@@ -558,6 +578,11 @@ pre {
     transform: none;
   }
 
+  .autopilot-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .calendar-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -583,6 +608,7 @@ pre {
   }
 
   .brief-card,
+  .autopilot-card,
   .result-card,
   .calendar-card,
   .post-preview {

@@ -1,11 +1,13 @@
 # PostPilot AI
 
-MVP SaaS autonome qui genere des posts LinkedIn a partir d'un brief simple.
+MVP SaaS autonome qui genere des posts LinkedIn a partir d'un brief simple ou
+d'un mode automatique pret a l'emploi.
 
 ## Fonctionnalites
 
 - Landing page SaaS responsive.
 - Generateur de posts LinkedIn avec objectif, audience, ton et longueur.
+- Mode autopilot pour generer automatiquement un post et un planning avec un brief SaaS.
 - Calendrier editorial de 7 idees.
 - Historique local via `localStorage`.
 - Copier le post et exporter les generations en JSON.

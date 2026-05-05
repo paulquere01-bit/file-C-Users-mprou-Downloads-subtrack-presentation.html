@@ -52,6 +52,15 @@ const CONTENT_ANGLES = [
 
 const WEEK_DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
+const AUTOMATIC_BRIEF = {
+  topic: "lancer un SaaS qui genere automatiquement des posts LinkedIn",
+  audience: "fondateurs SaaS, freelances et equipes marketing B2B",
+  goal: "launch",
+  tone: "direct",
+  length: "medium",
+  details: "montrer le gain de temps, la regularite editoriale et inviter a tester le generateur",
+};
+
 function clean(value, fallback = "") {
   const text = String(value ?? "").trim();
   return text || fallback;
@@ -196,6 +205,29 @@ export function generateContentCalendar(input, count = 7) {
       cta: `Inviter ${audience} a partager son experience.`,
     };
   });
+}
+
+export function createAutomaticBrief(overrides = {}) {
+  return {
+    ...AUTOMATIC_BRIEF,
+    ...Object.fromEntries(
+      Object.entries(overrides || {}).filter(([, value]) => clean(value)),
+    ),
+  };
+}
+
+export function generateAutomaticLinkedInCampaign(overrides = {}) {
+  const brief = createAutomaticBrief(overrides);
+  const post = generateLinkedInPost(brief);
+  const calendar = generateContentCalendar(brief);
+
+  return {
+    mode: "automatic",
+    brief,
+    post,
+    calendar,
+    generatedAt: new Date().toISOString(),
+  };
 }
 
 export function formatPostForDisplay(result) {

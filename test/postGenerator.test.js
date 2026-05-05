@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { generateContentCalendar, generateLinkedInPost } from "../src/postGenerator.js";
+import {
+  createAutomaticBrief,
+  generateAutomaticLinkedInCampaign,
+  generateContentCalendar,
+  generateLinkedInPost,
+} from "../src/postGenerator.js";
 
 describe("post generator", () => {
   it("builds a LinkedIn post with hook, audience, details and hashtags", () => {
@@ -75,5 +80,24 @@ describe("post generator", () => {
     );
 
     assert.equal(ideas.length, 30);
+  });
+
+  it("creates an automatic SaaS LinkedIn campaign from defaults", () => {
+    const campaign = generateAutomaticLinkedInCampaign();
+
+    assert.equal(campaign.mode, "automatic");
+    assert.match(campaign.brief.topic, /SaaS/i);
+    assert.match(campaign.post.post, /LinkedIn/);
+    assert.equal(campaign.calendar.length, 7);
+  });
+
+  it("keeps automatic defaults when overrides are empty", () => {
+    const brief = createAutomaticBrief({
+      topic: "",
+      audience: "consultants independants",
+    });
+
+    assert.match(brief.topic, /genere automatiquement des posts LinkedIn/i);
+    assert.equal(brief.audience, "consultants independants");
   });
 });
