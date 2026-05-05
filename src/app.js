@@ -154,7 +154,7 @@ async function copyText(text, button, successLabel = "Copie") {
 
   window.setTimeout(() => {
     button.textContent = originalLabel;
-  }, 1600);
+  }, 3000);
 }
 
 form.addEventListener("submit", (event) => {
