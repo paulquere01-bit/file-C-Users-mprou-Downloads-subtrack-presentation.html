@@ -1,5 +1,6 @@
 import {
   formatPostForDisplay,
+  generateAutopilotQueue,
   generateContentCalendar,
   generateLinkedInPost,
 } from "./postGenerator.js";
@@ -10,6 +11,9 @@ const form = document.querySelector("#post-form");
 const postOutput = document.querySelector("#post-output");
 const calendarOutput = document.querySelector("#calendar-output");
 const calendarButton = document.querySelector("#calendar-button");
+const autopilotButton = document.querySelector("#autopilot-button");
+const autopilotOutput = document.querySelector("#autopilot-output");
+const autopilotStatus = document.querySelector("#autopilot-status");
 const previewCopyButton = document.querySelector("#preview-copy-button");
 const copyButton = document.querySelector("#copy-button");
 const downloadButton = document.querySelector("#download-button");
@@ -18,6 +22,7 @@ const previewPost = document.querySelector("#demo .post-preview");
 
 let currentPost = null;
 let currentCalendar = [];
+let currentAutopilotQueue = [];
 
 function createId() {
   if (globalThis.crypto?.randomUUID) {
@@ -76,6 +81,44 @@ function renderCalendar(items) {
 
     card.append(day, title, prompt, objective);
     calendarOutput.append(card);
+  });
+}
+
+function renderAutopilotQueue(items) {
+  currentAutopilotQueue = items;
+  autopilotOutput.innerHTML = "";
+  autopilotStatus.textContent = items.length ? `${items.length} posts prets` : "En attente";
+
+  if (items.length === 0) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "empty-state";
+    emptyState.textContent = "Activez l'autopilote pour generer une semaine de posts prets a publier.";
+    autopilotOutput.append(emptyState);
+    return;
+  }
+
+  items.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "autopilot-item";
+
+    const meta = document.createElement("div");
+    meta.className = "autopilot-meta";
+
+    const day = document.createElement("strong");
+    day.textContent = `${item.day} - ${item.status}`;
+
+    const angle = document.createElement("span");
+    angle.textContent = item.angle;
+
+    const title = document.createElement("h4");
+    title.textContent = item.title;
+
+    const post = document.createElement("p");
+    post.textContent = item.post.post;
+
+    meta.append(day, angle);
+    card.append(meta, title, post);
+    autopilotOutput.append(card);
   });
 }
 
@@ -167,9 +210,25 @@ form.addEventListener("submit", (event) => {
 });
 
 calendarButton.addEventListener("click", () => {
+  if (!form.reportValidity()) {
+    return;
+  }
+
   const calendar = generateContentCalendar(getBriefFromForm());
   renderCalendar(calendar);
   flashButtonLabel(calendarButton, "7 idees generees");
+});
+
+autopilotButton.addEventListener("click", () => {
+  if (!form.reportValidity()) {
+    return;
+  }
+
+  const queue = generateAutopilotQueue(getBriefFromForm());
+  renderAutopilotQueue(queue);
+  renderPost(queue[0].post);
+  saveGeneration(queue[0].post);
+  flashButtonLabel(autopilotButton, "Autopilote pret");
 });
 
 previewCopyButton.addEventListener("click", async () => {
@@ -195,6 +254,7 @@ downloadButton.addEventListener("click", () => {
     {
       post: currentPost,
       calendar: currentCalendar,
+      autopilotQueue: currentAutopilotQueue,
       exportedAt: new Date().toISOString(),
     },
     "postpilot-export.json",
@@ -207,4 +267,5 @@ clearHistoryButton.addEventListener("click", () => {
 });
 
 renderCalendar([]);
+renderAutopilotQueue([]);
 setResultActionsEnabled(false);

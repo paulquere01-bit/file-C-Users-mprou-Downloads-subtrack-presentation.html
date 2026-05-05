@@ -39,8 +39,8 @@
           <h1>Generez des posts LinkedIn prets a publier en moins d'une minute.</h1>
           <p class="hero-text">
             PostPilot AI transforme une idee brute en accroche, storytelling, call-to-action,
-            hashtags et calendrier editorial. Ideal pour garder une presence LinkedIn reguliere
-            sans repartir de zero chaque jour.
+            hashtags et file de posts automatique. Ideal pour garder une presence LinkedIn
+            reguliere sans repartir de zero chaque jour.
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#generator">Generer un post</a>
@@ -53,7 +53,7 @@
             </div>
             <div>
               <strong>30j</strong>
-              <span>planning editable</span>
+              <span>file autopilote</span>
             </div>
             <div>
               <strong>0</strong>
@@ -109,7 +109,7 @@
             <h3>Calendrier editorial</h3>
             <p>
               Generez plusieurs idees de posts avec angles, objectifs et jours de publication
-              recommandes.
+              recommandes, puis transformez-les en posts prets a copier.
             </p>
           </article>
           <article>
@@ -207,6 +207,9 @@
               <button class="button secondary" id="calendar-button" type="button">
                 Generer 7 idees
               </button>
+              <button class="button secondary" id="autopilot-button" type="button">
+                Activer l'autopilote
+              </button>
             </div>
           </form>
 
@@ -236,6 +239,17 @@
             </button>
           </div>
           <div class="calendar-grid" id="calendar-output"></div>
+        </section>
+
+        <section class="autopilot-card" aria-labelledby="autopilot-title">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Autopilote</p>
+              <h3 id="autopilot-title">Posts LinkedIn automatiques</h3>
+            </div>
+            <span class="status-pill" id="autopilot-status">En attente</span>
+          </div>
+          <div class="autopilot-list" id="autopilot-output"></div>
         </section>
       </section>
 

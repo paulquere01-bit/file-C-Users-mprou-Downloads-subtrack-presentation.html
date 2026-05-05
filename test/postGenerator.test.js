@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { generateContentCalendar, generateLinkedInPost } from "../src/postGenerator.js";
+import {
+  generateAutopilotQueue,
+  generateContentCalendar,
+  generateLinkedInPost,
+} from "../src/postGenerator.js";
 
 describe("post generator", () => {
   it("builds a LinkedIn post with hook, audience, details and hashtags", () => {
@@ -58,5 +62,35 @@ describe("post generator", () => {
     );
 
     assert.equal(ideas.length, 30);
+  });
+
+  it("creates an automatic queue of ready-to-publish LinkedIn posts", () => {
+    const queue = generateAutopilotQueue({
+      topic: "vendre une offre SaaS sans equipe commerciale",
+      audience: "fondateurs SaaS",
+      goal: "lead",
+      tone: "expert",
+      length: "short",
+      details: "inclure un exemple B2B",
+    });
+
+    assert.equal(queue.length, 7);
+    assert.equal(queue[0].position, 1);
+    assert.equal(queue[0].status, "pret a publier");
+    assert.equal(queue[1].status, "planifie");
+    assert.match(queue[0].post.post, /vendre une offre SaaS/i);
+    assert.match(queue[0].post.post, /fondateurs SaaS/);
+    assert.match(queue[0].post.post, /angle erreur frequente/i);
+  });
+
+  it("requires a complete brief before creating the automatic queue", () => {
+    assert.throws(
+      () =>
+        generateAutopilotQueue({
+          topic: "creer un calendrier LinkedIn",
+          audience: "",
+        }),
+      /audience est obligatoire/,
+    );
   });
 });

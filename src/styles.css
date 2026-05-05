@@ -239,6 +239,7 @@ h3 {
 .brief-card,
 .result-card,
 .calendar-card,
+.autopilot-card,
 .feature-grid article,
 .pricing-grid article {
   border: 1px solid rgba(217, 224, 234, 0.9);
@@ -366,7 +367,8 @@ h3 {
 
 .brief-card,
 .result-card,
-.calendar-card {
+.calendar-card,
+.autopilot-card {
   padding: 26px;
 }
 
@@ -452,6 +454,11 @@ pre {
   margin-top: 22px;
 }
 
+.autopilot-card {
+  margin-top: 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(238, 245, 255, 0.9));
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -479,6 +486,65 @@ pre {
 .calendar-item span {
   color: var(--muted);
   font-size: 0.86rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(10, 102, 194, 0.1);
+  color: var(--primary-dark);
+  font-size: 0.84rem;
+  font-weight: 800;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+
+.autopilot-list {
+  display: grid;
+  gap: 14px;
+}
+
+.autopilot-item {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: white;
+}
+
+.autopilot-item h4 {
+  margin: 0;
+}
+
+.autopilot-item p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.autopilot-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.autopilot-meta strong {
+  color: var(--primary);
+}
+
+.autopilot-meta span {
+  border-radius: 999px;
+  background: var(--surface-muted);
+  color: var(--primary-dark);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 6px 10px;
 }
 
 .price {

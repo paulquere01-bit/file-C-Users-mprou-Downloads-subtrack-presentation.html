@@ -193,6 +193,53 @@ export function generateContentCalendar(input, count = 7) {
   });
 }
 
+export function generateAutopilotQueue(input, count = 7) {
+  const topic = clean(input?.topic);
+  const audience = clean(input?.audience);
+  const goal = clean(input?.goal, "education");
+  const tone = clean(input?.tone, "direct");
+  const length = clean(input?.length, "medium");
+  const baseDetails = clean(input?.details);
+
+  if (!topic) {
+    throw new Error("Le sujet est obligatoire pour generer une file automatique.");
+  }
+
+  if (!audience) {
+    throw new Error("L'audience est obligatoire pour generer une file automatique.");
+  }
+
+  return generateContentCalendar({ topic, audience, goal }, count).map((item, index) => {
+    const details = [
+      baseDetails,
+      `angle ${item.angle}`,
+      `jour de publication recommande : ${item.day}`,
+    ]
+      .filter(Boolean)
+      .join(" ; ");
+    const post = generateLinkedInPost({
+      topic: `${topic} - ${item.angle}`,
+      audience,
+      goal,
+      tone,
+      length,
+      details,
+    });
+
+    return {
+      id: post.id,
+      position: index + 1,
+      day: item.day,
+      angle: item.angle,
+      title: item.title,
+      objective: item.objective,
+      prompt: item.prompt,
+      post,
+      status: index === 0 ? "pret a publier" : "planifie",
+    };
+  });
+}
+
 export function formatPostForDisplay(result) {
   if (!result?.post) {
     return "";
